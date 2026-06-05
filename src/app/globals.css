@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+/* Light theme (default) */
+@theme {
+  /* Legacy marketing tokens */
+  --color-blue-primary: #2563eb;
+  --color-teal-verify: #14b8a6;
+  --color-canvas: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-heading: #0f172a;
+  --color-body: #475569;
+  --color-muted: #94a3b8;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --font-display: "Satoshi", "Inter", system-ui;
+  --font-body: "Inter", system-ui;
+
+  /* Admin / design system */
+  --font-admin: "Satoshi", "Inter", system-ui;
+
+  --color-brand-primary: #1c69d4;
+  --color-brand-primary-hover: #0653b6;
+  --color-brand-ink: #262626;
+  --color-brand-ink-emphasis: #1a1a1a;
+  --color-brand-muted: #6b6b6b;
+  --color-brand-subtle: #9b9b9b;
+  --color-brand-secondary: #3c3c3c;
+  --color-brand-danger: #dc2626;
+  --color-brand-success: #22c55e;
+
+  --color-admin-surface: #ffffff;
+  --color-admin-surface-muted: #fafafa;
+  --color-admin-border: #e6e6e6;
+  --color-admin-border-strong: #cccccc;
+  --color-admin-selection: color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
+
+  --spacing-admin-page-x: 1rem;
+  --spacing-admin-page-x-md: 3rem;
+  --spacing-admin-page-top: 1rem;
+  --spacing-admin-page-bottom: 5rem;
+  --spacing-admin-tab-gap: 2rem;
+  --spacing-admin-section: 2.5rem;
+  --spacing-admin-metric: 1.5rem;
+
+  --width-admin-container: 90rem;
+
+  --text-admin-tab: 0.8125rem;
+  --text-admin-label: 0.625rem;
+  --text-admin-caption: 0.6875rem;
+  --text-admin-body-sm: 0.75rem;
+  --text-admin-body: 0.875rem;
+  --text-admin-heading-sm: 1.375rem;
+  --text-admin-heading: 2rem;
+  --text-admin-heading-lg: 2.625rem;
+
+  --tracking-admin-tab: 0.09375rem;
+  --tracking-admin-label: 0.0625rem;
+  --tracking-admin-table: 0.09375rem;
+  --tracking-admin-filter: 0.03125rem;
+  --tracking-admin-action: 0.046875rem;
+
+  /* Client dashboard typography */
+  --text-dashboard-hero: 3rem;
+  --text-dashboard-subtitle: 1.125rem;
+  --text-dashboard-lead: 1rem;
+  --text-dashboard-field: 1rem;
+  --text-dashboard-cta: 0.875rem;
+  --text-dashboard-subnav: 0.875rem;
+  --text-dashboard-link: 0.8125rem;
+  --text-dashboard-empty-title: 1rem;
+  --text-dashboard-balance-lg: 1.5rem;
+  --text-dashboard-balance-md: 1.125rem;
+
+  --spacing-dashboard-nav-bottom: 4rem;
+}
+
+/* Opt-in dark mode (.dark on <html>) — page surfaces stay white */
+.dark {
+  --color-brand-ink: #f5f5f5;
+  --color-brand-ink-emphasis: #ffffff;
+  --color-brand-muted: #a3a3a3;
+  --color-brand-subtle: #737373;
+  --color-brand-secondary: #d4d4d4;
+  --color-admin-border: #2e2e2e;
+  --color-admin-border-strong: #404040;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    background-color: var(--color-canvas);
+  }
+
+  body {
+    background-color: var(--color-canvas);
+  }
+}
+
+@utility font-admin {
+  font-family: var(--font-admin);
+}
+
+@utility text-admin-tab {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-tab);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-tab);
+}
+
+@utility text-admin-label {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-label);
+}
+
+@utility text-admin-table-head {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-body);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-table);
+}
+
+@utility text-admin-table-head-sm {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-tab);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-table);
+}
+
+@utility text-admin-filter {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-filter);
+}
+
+@utility text-admin-action {
+  font-size: var(--text-admin-body-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-admin-action);
+}
+
+@utility text-admin-section-title {
+  font-family: var(--font-admin);
+  font-size: var(--text-admin-heading-sm);
+  font-weight: 700;
+}
+
+@utility text-admin-page-title {
+  font-size: var(--text-admin-heading);
+  font-weight: 700;
+}
+
+@utility text-admin-body-table {
+  font-size: var(--text-admin-body);
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+@utility selection-admin {
+  &::selection {
+    background: var(--color-admin-selection);
+  }
+}
+
+@utility text-dashboard-hero {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-hero);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+@utility text-dashboard-subtitle {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-subtitle);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+@utility text-dashboard-lead {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-lead);
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+@utility text-dashboard-field {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-field);
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+@utility text-dashboard-cta {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-cta);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--tracking-admin-filter);
+}
+
+@utility text-dashboard-subnav {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-subnav);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.01875rem;
+}
+
+@utility text-dashboard-link {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-link);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: var(--tracking-admin-tab);
+}
+
+@utility text-dashboard-empty-title {
+  font-family: var(--font-admin);
+  font-size: var(--text-dashboard-empty-title);
+  font-weight: 700;
+  line-height: 1.4;
+}
