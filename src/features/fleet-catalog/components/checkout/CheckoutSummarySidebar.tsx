@@ -17,7 +17,6 @@ export const CheckoutSummarySidebar = ({
   pickupLocation = 'Atlanta Int Airport',
   returnLocation = 'Atlanta Int Airport',
 }: CheckoutSummarySidebarProps) => {
-  // Format datetime for display (e.g., "Tue, Jun 02, 2026 | 12:00 PM")
   const formatDateTime = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', {
@@ -34,7 +33,6 @@ export const CheckoutSummarySidebar = ({
   return (
     <div className="lg:col-span-5">
       <div className="bg-[#f7f7f7] border border-admin-border p-6 space-y-6 rounded-none">
-        {/* Vehicle image & title */}
         <div className="flex items-center gap-4 pb-6 border-b border-admin-border">
           <div className="w-24 h-16 bg-admin-surface border border-admin-border p-1 flex items-center justify-center rounded-none shrink-0">
             <img src={car.image} alt={car.model} className="max-w-full max-h-full object-contain" />
@@ -48,8 +46,6 @@ export const CheckoutSummarySidebar = ({
             </span>
           </div>
         </div>
-
-        {/* Pickup and return timeline */}
         <div className="space-y-4">
           <h4 className="text-admin-tab text-brand-muted uppercase tracking-wide">
             Pickup and return
@@ -70,13 +66,11 @@ export const CheckoutSummarySidebar = ({
           </div>
         </div>
 
-        {/* What's included (static) */}
         <div className="pt-4 border-t border-admin-border space-y-3">
           <div className="flex justify-between items-center">
             <h4 className="text-admin-tab text-brand-muted uppercase tracking-wide">
               What&apos;s included
             </h4>
-            <span className="text-brand-muted text-[13px] cursor-pointer hover:text-brand-ink">ⓘ</span>
           </div>
           <div className="space-y-2 text-admin-body font-light text-brand-secondary">
             <div className="flex items-center gap-2">

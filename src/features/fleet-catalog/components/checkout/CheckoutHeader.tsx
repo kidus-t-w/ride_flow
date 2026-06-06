@@ -20,12 +20,6 @@ export const CheckoutHeader = ({ totalMainStr, onBack }: CheckoutHeaderProps) =>
       <span className="text-dashboard-field font-bold align-top">$</span>
       <span className="text-[32px] font-bold leading-none">{totalMainStr}</span>
       <span className="text-admin-body font-bold align-top">.00</span>
-      <button
-        type="button"
-        className="text-admin-body-sm font-normal text-brand-muted hover:text-brand-primary block underline tracking-normal ml-3 bg-transparent border-none"
-      >
-        Price details
-      </button>
     </div>
   </div>
 );

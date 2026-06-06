@@ -3,16 +3,14 @@
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 import { api } from '@/lib/api/client';
 
-interface LoginClientProps {
-  hasCredentialsError: boolean;
-}
-
-export default function LoginClient({ hasCredentialsError }: LoginClientProps) {
+export default function LoginClient() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -30,11 +28,16 @@ export default function LoginClient({ hasCredentialsError }: LoginClientProps) {
       document.cookie = `accessToken=${result.token}; path=/; max-age=604800; SameSite=Lax`;
       document.cookie = `userRole=${result.user.role}; path=/; max-age=604800; SameSite=Lax`;
 
-
-      if (result.user.role === 'admin') {
-        router.push('/admin');
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
       } else {
-        router.push('/dashboard');
+        if (result.user.role === 'admin') {
+          router.push('/admin');
+        } else {
+          router.push('/dashboard');
+        }
       }
     } catch (err: any) {
       setFormError(err.message || 'Invalid email or password');
@@ -63,14 +66,10 @@ export default function LoginClient({ hasCredentialsError }: LoginClientProps) {
             <p className="text-white/80 text-lg leading-relaxed max-w-md">
               Book premium vehicles, manage your fleet, and settle instantly – all from one dashboard.
             </p>
-            <div className="flex gap-4">
-              <div className="flex -space-x-2">
-              </div>
-            </div>
+           
           </div>
           <div className="relative z-10 text-xs text-white/40">© 2026 RideFlow – All rights reserved</div>
         </div>
-
         <div className="flex items-center justify-center px-6 py-12 md:px-10 lg:px-16">
           <div className="w-full max-w-md">
             <div className="mb-8">
@@ -103,30 +102,32 @@ export default function LoginClient({ hasCredentialsError }: LoginClientProps) {
                   <label htmlFor="password" className="text-admin-label uppercase text-brand-secondary block">
                     Password
                   </label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-admin-body-sm text-brand-muted hover:text-brand-primary transition-colors"
-                  >
+                  <Link href="/forgot-password" className="text-admin-body-sm text-brand-muted hover:text-brand-primary transition-colors">
                     Forgot password?
                   </Link>
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-muted hover:text-brand-ink"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
-              {(hasCredentialsError || formError) && (
-                <p className="text-admin-body-sm font-medium text-brand-danger">
-                  Invalid email or password
-                </p>
-              )}
+              {formError && <p className="text-admin-body-sm font-medium text-brand-danger">{formError}</p>}
 
               <button
                 type="submit"
@@ -140,10 +141,7 @@ export default function LoginClient({ hasCredentialsError }: LoginClientProps) {
             <div className="mt-8 text-center">
               <p className="text-admin-body-sm text-brand-muted">
                 Don’t have an account?{' '}
-                <Link
-                  href="/signup"
-                  className="font-bold text-brand-primary underline underline-offset-4 hover:text-brand-primary-hover"
-                >
+                <Link href="/signup" className="font-bold text-brand-primary underline underline-offset-4 hover:text-brand-primary-hover">
                   Create one now
                 </Link>
               </p>

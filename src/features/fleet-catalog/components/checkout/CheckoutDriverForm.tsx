@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CheckoutDriverFormProps {
   email: string;
@@ -9,165 +9,164 @@ interface CheckoutDriverFormProps {
   setFirstName: (v: string) => void;
   lastName: string;
   setLastName: (v: string) => void;
-  countryCode: string;
-  setCountryCode: (v: string) => void;
   phoneNumber: string;
   setPhoneNumber: (v: string) => void;
   company: string;
   setCompany: (v: string) => void;
   isAgeConfirmed: boolean;
   setIsAgeConfirmed: (v: boolean) => void;
+  onValidationChange?: (isValid: boolean) => void;
+  submitted?: boolean;
 }
 
 const fieldClass =
-  'w-full h-12 px-4 bg-admin-surface border border-admin-border text-brand-ink text-dashboard-field font-light focus:outline-none focus:border-brand-ink rounded-none';
+  'w-full h-12 px-4 bg-admin-surface border text-brand-ink text-dashboard-field font-light focus:outline-none focus:border-brand-ink rounded-none transition-colors';
+const errorClass = 'text-brand-danger text-xs mt-1';
+const labelClass = 'text-admin-body-sm font-bold text-brand-muted uppercase tracking-wide';
 
-const labelClass =
-  'text-admin-body-sm font-bold text-brand-muted uppercase tracking-wide';
+export const CheckoutDriverForm = (props: CheckoutDriverFormProps) => {
+  const [errors, setErrors] = useState<{
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+    ageConfirmed?: string;
+  }>({});
 
-export const CheckoutDriverForm = (props: CheckoutDriverFormProps) => (
-  <div>
-    <h2 className="text-[24px] font-bold uppercase text-brand-ink tracking-normal mb-6">
-      Who will drive?
-    </h2>
+  const validateField = (field: keyof typeof errors, value: string | boolean): string | undefined => {
+    switch (field) {
+      case 'email':
+        if (!value) return 'Email is required';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value as string)) return 'Invalid email address';
+        return undefined;
+      case 'firstName':
+        if (!value) return 'First name is required';
+        if ((value as string).length < 2) return 'First name must be at least 2 characters';
+        return undefined;
+      case 'lastName':
+        if (!value) return 'Last name is required';
+        if ((value as string).length < 2) return 'Last name must be at least 2 characters';
+        return undefined;
+      case 'phoneNumber':
+        if (!value) return 'Phone number is required';
+        if ((value as string).replace(/\D/g, '').length < 5) return 'Phone number must be at least 5 digits';
+        return undefined;
+      case 'ageConfirmed':
+        if (!value) return 'You must confirm you are 25 years or older';
+        return undefined;
+      default:
+        return undefined;
+    }
+  };
 
-    <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-      <div className="space-y-1.5">
-        <label className={labelClass}>Email</label>
-        <input
-          type="email"
-          value={props.email}
-          onChange={(e) => props.setEmail(e.target.value)}
-          className={fieldClass}
-        />
-      </div>
+  useEffect(() => {
+    const newErrors = {
+      email: validateField('email', props.email),
+      firstName: validateField('firstName', props.firstName),
+      lastName: validateField('lastName', props.lastName),
+      phoneNumber: validateField('phoneNumber', props.phoneNumber),
+      ageConfirmed: validateField('ageConfirmed', props.isAgeConfirmed),
+    };
+    setErrors(newErrors);
+    const isValid = !Object.values(newErrors).some(e => e !== undefined);
+    props.onValidationChange?.(isValid);
+  }, [props.email, props.firstName, props.lastName, props.phoneNumber, props.isAgeConfirmed]);
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  const shouldShowError = (field: keyof typeof errors) => {
+    return props.submitted && errors[field];
+  };
+
+  return (
+    <div>
+      <h2 className="text-[24px] font-bold uppercase text-brand-ink tracking-normal mb-6">
+        Who will drive?
+      </h2>
+
+      <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
-          <label className={labelClass}>First name</label>
+          <label className={labelClass}>Email *</label>
           <input
-            type="text"
-            value={props.firstName}
-            onChange={(e) => props.setFirstName(e.target.value)}
-            className={fieldClass}
+            type="email"
+            value={props.email}
+            onChange={(e) => props.setEmail(e.target.value)}
+            className={`${fieldClass} ${shouldShowError('email') && errors.email ? 'border-brand-danger' : 'border-admin-border'}`}
           />
+          {shouldShowError('email') && errors.email && <p className={errorClass}>{errors.email}</p>}
         </div>
-        <div className="space-y-1.5">
-          <label className={labelClass}>Last name</label>
-          <input
-            type="text"
-            value={props.lastName}
-            onChange={(e) => props.setLastName(e.target.value)}
-            className={fieldClass}
-          />
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
-        <div className="sm:col-span-3 space-y-1.5">
-          <label className={labelClass}>Country</label>
-          <div className="relative">
-            <select
-              value={props.countryCode}
-              onChange={(e) => props.setCountryCode(e.target.value)}
-              className={`${fieldClass} pl-12 appearance-none cursor-pointer font-normal`}
-            >
-              <option value="+1">+1</option>
-              <option value="+251">+251</option>
-              <option value="+44">+44</option>
-            </select>
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
-              <div className="w-5 h-3.5 bg-blue-800 border border-gray-300 relative overflow-hidden flex flex-col justify-between">
-                <div className="h-[2px] bg-red-600 w-full" />
-                <div className="h-[2px] bg-white w-full" />
-                <div className="h-[2px] bg-red-600 w-full" />
-              </div>
-            </div>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-brand-muted text-[11px]">
-              ▼
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className={labelClass}>First name *</label>
+            <input
+              type="text"
+              value={props.firstName}
+              onChange={(e) => props.setFirstName(e.target.value)}
+              className={`${fieldClass} ${shouldShowError('firstName') && errors.firstName ? 'border-brand-danger' : 'border-admin-border'}`}
+            />
+            {shouldShowError('firstName') && errors.firstName && <p className={errorClass}>{errors.firstName}</p>}
+          </div>
+          <div className="space-y-1.5">
+            <label className={labelClass}>Last name *</label>
+            <input
+              type="text"
+              value={props.lastName}
+              onChange={(e) => props.setLastName(e.target.value)}
+              className={`${fieldClass} ${shouldShowError('lastName') && errors.lastName ? 'border-brand-danger' : 'border-admin-border'}`}
+            />
+            {shouldShowError('lastName') && errors.lastName && <p className={errorClass}>{errors.lastName}</p>}
           </div>
         </div>
-        <div className="sm:col-span-9 space-y-1.5">
-          <label className={labelClass}>Phone number</label>
+
+        <div className="space-y-1.5">
+          <label className={labelClass}>Phone number *</label>
           <input
             type="tel"
             value={props.phoneNumber}
             onChange={(e) => props.setPhoneNumber(e.target.value)}
+            className={`${fieldClass} ${shouldShowError('phoneNumber') && errors.phoneNumber ? 'border-brand-danger' : 'border-admin-border'}`}
+            placeholder="+1 234 567 8900"
+          />
+          {shouldShowError('phoneNumber') && errors.phoneNumber && <p className={errorClass}>{errors.phoneNumber}</p>}
+        </div>
+
+        <div className="space-y-1.5">
+          <label className={labelClass}>
+            Company <span className="text-brand-subtle font-light lowercase">(optional)</span>
+          </label>
+          <input
+            type="text"
+            value={props.company}
+            onChange={(e) => props.setCompany(e.target.value)}
             className={fieldClass}
           />
         </div>
-      </div>
 
-      <div className="space-y-1.5">
-        <label className={labelClass}>
-          Company <span className="text-brand-subtle font-light lowercase">(optional)</span>
-        </label>
-        <input
-          type="text"
-          value={props.company}
-          onChange={(e) => props.setCompany(e.target.value)}
-          className={fieldClass}
-        />
-      </div>
+        <div className="pt-4 space-y-5">
+          <hr className="border-t border-admin-border my-6" />
 
-      <div className="pt-4 space-y-5">
-
-        <hr className="border-t border-admin-border my-6" />
-
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => props.setIsAgeConfirmed(!props.isAgeConfirmed)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ')
-              props.setIsAgeConfirmed(!props.isAgeConfirmed);
-          }}
-          className="flex items-center gap-4 cursor-pointer select-none group pt-2"
-        >
           <div
-            className={`w-5 h-5 border flex items-center justify-center rounded-none transition-colors ${
-              props.isAgeConfirmed
-                ? 'bg-brand-ink border-brand-ink'
-                : 'bg-admin-surface border-admin-border-strong'
-            }`}
+            role="button"
+            tabIndex={0}
+            onClick={() => props.setIsAgeConfirmed(!props.isAgeConfirmed)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') props.setIsAgeConfirmed(!props.isAgeConfirmed);
+            }}
+            className="flex items-center gap-4 cursor-pointer select-none group pt-2"
           >
-            {props.isAgeConfirmed ? (
-              <span className="text-admin-surface text-[11px] font-bold">✓</span>
-            ) : null}
+            <div
+              className={`w-5 h-5 border flex items-center justify-center rounded-none transition-colors ${
+                props.isAgeConfirmed
+                  ? 'bg-brand-ink border-brand-ink'
+                  : 'bg-admin-surface border-admin-border-strong'
+              }`}
+            >
+              {props.isAgeConfirmed && <span className="text-admin-surface text-[11px] font-bold">✓</span>}
+            </div>
+            <span className="text-admin-body font-bold text-brand-ink">I am 25 years of age or older *</span>
           </div>
-          <span className="text-admin-body font-bold text-brand-ink">
-            I am 25 years of age or older
-          </span>
+          {shouldShowError('ageConfirmed') && errors.ageConfirmed && <p className={errorClass}>{errors.ageConfirmed}</p>}
         </div>
-      </div>
-    </form>
-  </div>
-);
-
-const PreferenceRow = ({
-  active,
-  onSelect,
-  children,
-}: {
-  active: boolean;
-  onSelect: () => void;
-  children: ReactNode;
-}) => (
-  <div
-    role="button"
-    tabIndex={0}
-    onClick={onSelect}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') onSelect();
-    }}
-    className="flex items-start gap-4 cursor-pointer group select-none"
-  >
-    <div className="mt-1 flex items-center justify-center w-5 h-5 rounded-full border border-brand-ink p-[2px]">
-      {active ? <div className="w-full h-full bg-brand-ink rounded-full" /> : null}
+      </form>
     </div>
-    <p className="text-admin-body font-light text-brand-secondary leading-[1.55] flex-1">
-      {children}
-    </p>
-  </div>
-);
+  );
+};

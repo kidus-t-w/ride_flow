@@ -40,9 +40,6 @@ export default function FeatureShowcase() {
           Effortless arrivals. <br />
           No matter the forecast.
         </h2>
-        <button className="px-8 h-12 bg-[#0B5E96] hover:bg-[#043A5F] text-white text-[14px] font-bold tracking-[0.5px] uppercase transition-colors duration-150">
-          Discover the Difference
-        </button>
       </div>
 
       <div className="relative z-10 w-full bg-linear-to-t from-[#0A1215] via-[#0A1215]/90 to-transparent pt-12 pb-16 px-4 md:px-8">

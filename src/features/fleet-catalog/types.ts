@@ -12,6 +12,7 @@ export interface FleetVehicle {
   seats: number;
   bags: number;
   transmission: string;
+  fuelType?: string;
   isTopPick: boolean;
   isHotOffer: boolean;
   isPremium: boolean;
@@ -21,10 +22,12 @@ export interface FleetVehicle {
 }
 
 export interface FleetCatalogFilters {
-  selectedType: string | null;
-  isPremiumSelected: boolean;
-  selectedFeature: string | null;
-  selectedSeats: number | null;
-  selectedBags: number | null;
-  driverAge: string;
+  category: string | null; 
+  transmission: string | null;      
+  fuelType: string | null;      
+  minSeats: number | null;
+  maxPrice: number | null;  
+  onlyHotOffers: boolean;
+  onlyPremium: boolean;
+  driverAge: string; 
 }

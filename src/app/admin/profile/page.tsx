@@ -12,8 +12,6 @@ export default function AdminProfilePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Editable fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -111,14 +109,7 @@ export default function AdminProfilePage() {
         </div>
       </form>
 
-      {/* Password change section – optional, if backend endpoint exists */}
-      <div className="border-t border-admin-border pt-8 mt-8">
-        <h3 className="text-admin-heading-sm font-bold text-brand-ink mb-4">Change Password</h3>
-        <p className="text-admin-body text-brand-muted mb-4">
-          Password change is not yet implemented in the backend. This feature will be available soon.
-        </p>
-        {/* You could add a form here that calls changeAdminPassword when endpoint is ready */}
-      </div>
+     
     </div>
   );
 }

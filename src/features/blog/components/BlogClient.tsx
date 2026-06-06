@@ -36,10 +36,7 @@ export default function PublicBlogPage() {
     <div className="w-full min-h-screen bg-admin-surface text-brand-ink pt-12 pb-24 px-4 md:px-12 selection:bg-brand-primary/20">
       <div className="max-w-[1440px] mx-auto space-y-12">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-admin-border pb-6 gap-6">
-          <div className="space-y-2">
-            <h1 className="text-[42px] font-bold uppercase text-brand-ink tracking-tight">THE LEDGER JOURNAL</h1>
-            <p className="text-sm font-light text-brand-muted">Decoupled telemetry analysis, engineering deep dives, and system operation logs.</p>
-          </div>
+         
           <div className="flex flex-wrap gap-2">
             {(['ALL', 'INSIGHTS', 'ENGINEERING', 'ANNOUNCEMENTS'] as const).map((cat) => (
               <button

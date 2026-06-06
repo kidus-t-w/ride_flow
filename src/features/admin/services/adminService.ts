@@ -1,6 +1,7 @@
 import { api } from '@/lib/api/client';
 import type { VehicleAsset, BlogPost, PendingTx, ReservationLog, HistoricalEarnings, AdminUser } from '../types';
 
+
 export const fetchAdminFleet = async (): Promise<VehicleAsset[]> => {
   try {
     const res = await api.get<{ vehicles: any[] }>('/vehicles?limit=50');
@@ -9,7 +10,7 @@ export const fetchAdminFleet = async (): Promise<VehicleAsset[]> => {
       modelName: `${v.make} ${v.model}`,
       plateNumber: v.plateNumber || '—',
       status: v.isAvailable ? 'Available' : 'On Rental',
-      batteryOrFuel: v.fuelType || '—',
+      batteryOrFuel: v.fuelType || '—', 
       currentLocation: v.location || '—',
       imageUrl: v.images?.[0]?.url,
     }));
@@ -39,6 +40,10 @@ const mapBookingStatus = (status: string): 'Confirmed' | 'Pending Dispatch' | 'C
     case 'pending': return 'Pending Dispatch';
     default: return 'Pending Dispatch';
   }
+};
+
+export const updateBookingStatus = async (bookingId: number, status: string): Promise<void> => {
+  await api.patch(`/bookings/${bookingId}/status`, { status });
 };
 
 export const fetchHistoricalEarnings = async (): Promise<HistoricalEarnings> => {

@@ -99,7 +99,7 @@ export default function BlogPage() {
         The H1 here matches the title in the BlogClient header below.
         They must say the same thing for consistency.
       */}
-      <div className="max-w-[1440px] mx-auto px-4 md:px-12 pt-12">
+      <div className="max-w-[1440px] mx-auto px-4 pt-12">
         <div className="border-b border-admin-border pb-6">
           <h1 className="text-[42px] font-bold uppercase text-brand-ink tracking-tight">
             The RideFlow Blog

@@ -28,6 +28,11 @@ export default function FleetCatalogClient() {
   const [filters, setFilters] = useState<FleetCatalogFilters>({ ...DEFAULT_FLEET_FILTERS });
   const detailPanelRef = useRef<HTMLDivElement>(null);
 
+  const redirectToSignup = useCallback((returnUrl: string) => {
+    localStorage.setItem('redirectAfterLogin', returnUrl);
+    window.open('/signup', '_blank');
+  }, []);
+
   useEffect(() => {
     fetchFleetVehicles()
       .then(setVehicles)
@@ -73,8 +78,29 @@ export default function FleetCatalogClient() {
       return;
     }
     const url = `/checkout?carId=${encodeURIComponent(car.id)}&rateId=${rate}&pickupDate=${encodeURIComponent(pickupDate)}&returnDate=${encodeURIComponent(returnDate)}`;
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      redirectToSignup(url);
+      return;
+    }
     router.push(url);
-  }, [router, searchParams]);
+  }, [router, searchParams, redirectToSignup]);
+
+  const handleBook = useCallback((car: FleetVehicle, totalPrice: number) => {
+    const pickupDate = searchParams.get('pickupDate');
+    const returnDate = searchParams.get('returnDate');
+    if (!pickupDate || !returnDate) {
+      alert('Please select pickup and return dates before choosing a vehicle.');
+      return;
+    }
+    const url = `/checkout?carId=${car.id}&pickupDate=${encodeURIComponent(pickupDate)}&returnDate=${encodeURIComponent(returnDate)}&totalPrice=${totalPrice}`;
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      redirectToSignup(url);
+      return;
+    }
+    router.push(url);
+  }, [router, searchParams, redirectToSignup]);
 
   if (loading) return <div className="p-8 text-center">Loading fleet catalog...</div>;
   if (error) return <ErrorBanner message={error} />;
@@ -95,10 +121,7 @@ export default function FleetCatalogClient() {
             pickupDate={searchParams.get('pickupDate')!}
             returnDate={searchParams.get('returnDate')!}
             onClose={() => setSelectedCar(null)}
-            onBook={(car, totalPrice) => {
-              const url = `/checkout?carId=${car.id}&pickupDate=${searchParams.get('pickupDate')}&returnDate=${searchParams.get('returnDate')}&totalPrice=${totalPrice}`;
-              router.push(url);
-            }}
+            onBook={handleBook}
           />
         </div>
       )}

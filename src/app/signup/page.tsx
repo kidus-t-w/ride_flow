@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 import { api } from '@/lib/api/client';
 
 export default function SignupPage() {
@@ -11,7 +12,8 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');        
+  const [showPassword, setShowPassword] = useState(false);
+  const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -46,7 +48,13 @@ export default function SignupPage() {
       document.cookie = `accessToken=${loginResult.token}; path=/; max-age=604800; SameSite=Lax`;
       document.cookie = `userRole=${loginResult.user.role}; path=/; max-age=604800; SameSite=Lax`;
 
-      router.push('/dashboard');
+      const redirectUrl = localStorage.getItem('redirectAfterLogin');
+      if (redirectUrl) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirectUrl);
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: any) {
       const message = err.message || 'Unable to create account. Please try again.';
       setFormError(message);
@@ -75,8 +83,7 @@ export default function SignupPage() {
             <p className="text-white/80 text-lg leading-relaxed max-w-md">
               Create your account and unlock seamless bookings, crypto payments, and fleet management.
             </p>
-            <div className="flex gap-4">
-            </div>
+            <div className="flex gap-4" />
           </div>
           <div className="relative z-10 text-xs text-white/40">© 2026 RideFlow – All rights reserved</div>
         </div>
@@ -160,16 +167,25 @@ export default function SignupPage() {
                 <label htmlFor="password" className="text-admin-label uppercase text-brand-secondary block">
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-muted hover:text-brand-ink"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 <p className="text-[11px] text-brand-muted mt-1">
                   At least 8 characters, one uppercase letter, one number
                 </p>

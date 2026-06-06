@@ -1,7 +1,8 @@
 'use client';
 
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useBalance } from 'wagmi';
 import { useState } from 'react';
+import { formatUnits } from 'viem';
 
 export function useWalletConnection() {
   const { address, isConnected } = useAccount();
@@ -9,16 +10,17 @@ export function useWalletConnection() {
   const { disconnect } = useDisconnect();
   const [isConnecting, setIsConnecting] = useState(false);
 
+  // Fetch balance for the connected address
+  const { data: balanceData } = useBalance({ address });
+
+  const balance = balanceData ? formatUnits(balanceData.value, balanceData.decimals) : undefined;
+  const symbol = balanceData?.symbol;
+
   const connectWallet = async () => {
     setIsConnecting(true);
     try {
       const connector = connectors.find((c) => c.id === 'injected');
-      if (connector) {
-        connect({ connector });
-      } else {
-        console.error('No injected connector found');
-        alert('No wallet detected. Please install MetaMask.');
-      }
+      if (connector) connect({ connector });
     } catch (error) {
       console.error('Wallet connection failed:', error);
     } finally {
@@ -34,6 +36,8 @@ export function useWalletConnection() {
     address,
     isConnected,
     isConnecting: isPending || isConnecting,
+    balance,
+    symbol,
     connectWallet,
     disconnectWallet,
   };

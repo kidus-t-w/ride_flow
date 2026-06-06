@@ -9,7 +9,6 @@ import { DASHBOARD_TABS } from '@/features/dashboard/types'
 const dashboardRoutes = {
   BOOKINGS:        '/dashboard/bookings',
   ACCOUNT:         '/dashboard/account',
-  'CRYPTO WALLET': '/dashboard/crypto',
 } as const
 
 const tabsForNav = DASHBOARD_TABS.map((tab) => ({

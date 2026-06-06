@@ -1,28 +1,35 @@
 'use client';
 
 import { useWalletConnection } from '@/hooks/useWalletConnection';
-import { useBalance } from 'wagmi';
 import { ChevronDown, Wallet } from 'lucide-react';
-import { useState } from 'react';
-import { formatUnits } from 'viem';
+import { useState, useEffect } from 'react';
 
 export const WalletButton = () => {
-  const { address, isConnected, connectWallet, disconnectWallet, isConnecting } = useWalletConnection();
-  const { data: balance } = useBalance({ address });
+  const { address, isConnected, connectWallet, disconnectWallet, isConnecting, balance, symbol } = useWalletConnection();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const truncateAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
-  const formatBalance = (value?: bigint, decimals?: number) => {
-    if (!value || decimals === undefined) return '0';
-    const formatted = formatUnits(value, decimals);
-    const num = parseFloat(formatted);
+  const formatBalance = (value?: string) => {
+    if (!value) return '0';
+    const num = parseFloat(value);
     if (isNaN(num)) return '0';
-    return num.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 6,
-    });
+    return num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 });
   };
+
+  if (!mounted) {
+    return (
+      <button className="flex items-center gap-2 px-3 py-1.5 border border-admin-border text-brand-muted bg-admin-surface">
+        <Wallet className="w-4 h-4" />
+        Connect Wallet
+      </button>
+    );
+  }
 
   if (!isConnected) {
     return (
@@ -37,8 +44,8 @@ export const WalletButton = () => {
     );
   }
 
-  const formattedBalance = formatBalance(balance?.value, balance?.decimals);
-  const symbol = balance?.symbol || 'ETH';
+  const formattedBalance = formatBalance(balance);
+  const tokenSymbol = symbol || 'ETH';
 
   return (
     <div className="relative">
@@ -48,7 +55,7 @@ export const WalletButton = () => {
       >
         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
         <span className="px-2 py-0.5 rounded text-[11px] text-brand-ink">
-          {formattedBalance} {symbol}
+          {formattedBalance} {tokenSymbol}
         </span>
         <ChevronDown className="w-3 h-3" />
       </button>
@@ -62,7 +69,7 @@ export const WalletButton = () => {
               <div className="flex justify-between items-baseline">
                 <span className="text-xs text-brand-muted uppercase">Total Balance</span>
                 <span className="text-xl font-bold text-brand-ink">
-                  {formattedBalance} {symbol}
+                  {formattedBalance} {tokenSymbol}
                 </span>
               </div>
             </div>
