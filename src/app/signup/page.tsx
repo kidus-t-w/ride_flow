@@ -214,7 +214,7 @@ export default function SignupPage() {
                 />
                 {getFieldError('phone') && <p className="text-brand-danger text-xs mt-1">{getFieldError('phone')}</p>}
                 <p className="text-[11px] text-brand-muted mt-1">
-                  Enter a 10‑digit number (e.g., 0712345678). Spaces, dashes, and the '+' symbol will be removed.
+                  Enter a 10‑digit number (e.g., 0712345678). 
                 </p>
               </div>
 
