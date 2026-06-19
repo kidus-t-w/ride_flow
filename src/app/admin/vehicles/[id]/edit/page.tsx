@@ -186,7 +186,7 @@ export default function EditVehiclePage() {
         )}
 
         <div className="space-y-2">
-          <label className="text-admin-label uppercase text-brand-muted">Add New Images (max 10 total)</label>
+          <label className="text-admin-label uppercase text-brand-muted">Add New Images </label>
           <input type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={e => setImageFiles(e.target.files ? Array.from(e.target.files) : [])} className="block w-full" />
           <div className="text-xs text-brand-muted">Selected: {imageFiles.length} file(s)</div>
         </div>

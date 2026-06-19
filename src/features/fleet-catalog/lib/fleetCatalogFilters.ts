@@ -8,7 +8,7 @@ export const DEFAULT_FLEET_FILTERS: FleetCatalogFilters = {
   maxPrice: null,
   onlyHotOffers: false,
   onlyPremium: false,
-  driverAge: '25+',
+  driverAge: '21+',
 };
 
 export const filterFleetVehicles = (

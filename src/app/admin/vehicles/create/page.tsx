@@ -220,7 +220,7 @@ export default function CreateVehiclePage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-admin-label uppercase text-brand-muted">Images (max 10, JPEG/PNG/WebP)</label>
+          <label className="text-admin-label uppercase text-brand-muted">Images (JPEG/PNG/WebP)</label>
           <input
             type="file"
             multiple
