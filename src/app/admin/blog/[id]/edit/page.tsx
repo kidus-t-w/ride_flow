@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { fetchBlogById, updateBlogPost } from '@/features/admin/services/adminService';
-import { ErrorBanner } from '@/components/ui/ErrorBanner';
-import type { BlogPost } from '@/features/admin/types';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function EditBlogPage() {
   const router = useRouter();
@@ -12,15 +12,14 @@ export default function EditBlogPage() {
   const id = params?.id as string;
 
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<BlogPost['category']>('INSIGHTS');
-  const [status, setStatus] = useState<BlogPost['status']>('Draft');
+  const [category, setCategory] = useState('INSIGHTS');
+  const [status, setStatus] = useState('Draft');
   const [content, setContent] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
   const [author, setAuthor] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -36,10 +35,10 @@ export default function EditBlogPage() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
-        setLoading(false);
+        toast.error(err.message);
+        router.push('/admin/blog');
       });
-  }, [id]);
+  }, [id, router]);
 
   const generateExcerpt = (text: string) => {
     const plainText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -50,16 +49,16 @@ export default function EditBlogPage() {
     const url = e.target.value;
     setCoverUrl(url);
     setImagePreview(url);
+    if (!url) setImagePreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim() || !coverUrl.trim() || !author.trim()) {
-      setError('Title, content, cover URL, and author are required');
+      toast.error('Title, content, cover URL, and author are required');
       return;
     }
     setSubmitting(true);
-    setError(null);
 
     const excerpt = generateExcerpt(content);
     const blogData = {
@@ -75,16 +74,27 @@ export default function EditBlogPage() {
 
     try {
       await updateBlogPost(id, blogData);
+      toast.success('Blog post updated successfully');
       router.push('/admin/blog');
     } catch (err: any) {
-      setError(err.message || 'Failed to update blog post');
+      toast.error(err.message || 'Failed to update blog post');
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading blog post...</div>;
-  if (error) return <ErrorBanner message={error} />;
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <Skeleton className="h-8 w-48 mb-6" />
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
@@ -106,7 +116,7 @@ export default function EditBlogPage() {
             <label className="text-admin-label uppercase text-brand-muted">Category</label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as BlogPost['category'])}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full h-10 border border-admin-border px-3"
             >
               <option value="INSIGHTS">INSIGHTS</option>
@@ -118,7 +128,7 @@ export default function EditBlogPage() {
             <label className="text-admin-label uppercase text-brand-muted">Status</label>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value as BlogPost['status'])}
+              onChange={(e) => setStatus(e.target.value)}
               className="w-full h-10 border border-admin-border px-3"
             >
               <option value="Draft">Draft</option>

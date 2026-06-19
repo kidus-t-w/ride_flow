@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { createVehicle } from '@/features/admin/services/adminService';
-import { ErrorBanner } from '@/components/ui/ErrorBanner';
 
 export default function CreateVehiclePage() {
   const router = useRouter();
@@ -25,7 +25,6 @@ export default function CreateVehiclePage() {
   const [featureInput, setFeatureInput] = useState('');
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const addFeature = () => {
     if (featureInput.trim()) {
@@ -46,7 +45,6 @@ export default function CreateVehiclePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
@@ -59,9 +57,10 @@ export default function CreateVehiclePage() {
       imageFiles.forEach(file => formData.append('images', file));
 
       await createVehicle(formData);
+      toast.success('Vehicle created successfully');
       router.push('/admin/vehicles');
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message || 'Failed to create vehicle');
     } finally {
       setLoading(false);
     }
@@ -70,9 +69,7 @@ export default function CreateVehiclePage() {
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold uppercase text-brand-ink mb-6">Add New Vehicle</h1>
-      {error && <ErrorBanner message={error} />}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Two columns for basic info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1">
             <label className="text-admin-label uppercase text-brand-muted">Make *</label>
@@ -199,6 +196,7 @@ export default function CreateVehiclePage() {
             className="w-full border border-admin-border p-3"
           />
         </div>
+
         <div className="space-y-2">
           <label className="text-admin-label uppercase text-brand-muted">Features</label>
           <div className="flex gap-2">
@@ -244,10 +242,20 @@ export default function CreateVehiclePage() {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <button type="submit" disabled={loading} className="px-6 py-2 bg-brand-primary text-white uppercase font-bold">
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-6 py-2 bg-brand-primary text-white uppercase font-bold disabled:opacity-50"
+          >
             {loading ? 'Creating...' : 'Create Vehicle'}
           </button>
-          <button type="button" onClick={() => router.back()} className="px-6 py-2 border border-admin-border uppercase">Cancel</button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-6 py-2 border border-admin-border uppercase"
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>

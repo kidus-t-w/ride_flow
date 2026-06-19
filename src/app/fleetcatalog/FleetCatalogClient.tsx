@@ -8,6 +8,7 @@ import { FleetCatalogVehicleGrid } from '@/features/fleet-catalog/components/Fle
 import { CarDetailPanel } from '@/features/fleet-catalog/components/catalog/CarDetailPanel';
 import { FleetFilterPanel } from '@/features/fleet-catalog/components/filters/FleetFilterPanel';
 import { FleetCatalogShell } from '@/features/fleet-catalog/components/FleetCatalogShell';
+import { FleetCatalogSkeleton } from '@/features/fleet-catalog/components/FleetCatalogSkeleton';
 import { fetchFleetVehicles } from '@/features/fleet-catalog/services/fleetCatalogService';
 import {
   DEFAULT_FLEET_FILTERS,
@@ -15,6 +16,8 @@ import {
 } from '@/features/fleet-catalog/lib/fleetCatalogFilters';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import type { FleetVehicle, FleetCatalogFilters, RentalRate } from '@/features/fleet-catalog/types';
+import toast from 'react-hot-toast';
+
 
 export default function FleetCatalogClient() {
   const router = useRouter();
@@ -27,6 +30,7 @@ export default function FleetCatalogClient() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [filters, setFilters] = useState<FleetCatalogFilters>({ ...DEFAULT_FLEET_FILTERS });
   const detailPanelRef = useRef<HTMLDivElement>(null);
+  
 
   const redirectToSignup = useCallback((returnUrl: string) => {
     localStorage.setItem('redirectAfterLogin', returnUrl);
@@ -90,7 +94,7 @@ export default function FleetCatalogClient() {
     const pickupDate = searchParams.get('pickupDate');
     const returnDate = searchParams.get('returnDate');
     if (!pickupDate || !returnDate) {
-      alert('Please select pickup and return dates before choosing a vehicle.');
+      toast.error('Please select pickup and return dates before choosing a vehicle.');
       return;
     }
     const url = `/checkout?carId=${car.id}&pickupDate=${encodeURIComponent(pickupDate)}&returnDate=${encodeURIComponent(returnDate)}&totalPrice=${totalPrice}`;
@@ -102,7 +106,7 @@ export default function FleetCatalogClient() {
     router.push(url);
   }, [router, searchParams, redirectToSignup]);
 
-  if (loading) return <div className="p-8 text-center">Loading fleet catalog...</div>;
+  if (loading) return <FleetCatalogSkeleton />;
   if (error) return <ErrorBanner message={error} />;
 
   return (

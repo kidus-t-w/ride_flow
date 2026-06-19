@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchPublicBlogById, PublicBlogPost } from '@/features/blog/services/blogService';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
+import { BlogDetailSkeleton } from '@/features/blog/components/BlogDetailSkeleton';
 
 export default function BlogDetailPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function BlogDetailPage() {
       .finally(() => setLoading(false));
   }, [blogId, router]);
 
-  if (loading) return <div className="p-12 text-center">Loading article...</div>;
+  if (loading) return <BlogDetailSkeleton />;
   if (error) return <ErrorBanner message={error} />;
   if (!post) return null;
 

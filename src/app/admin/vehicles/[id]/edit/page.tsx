@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { fetchVehicleById, updateVehicle } from '@/features/admin/services/adminService';
-import { ErrorBanner } from '@/components/ui/ErrorBanner';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function EditVehiclePage() {
   const router = useRouter();
@@ -13,7 +14,6 @@ export default function EditVehiclePage() {
   const [form, setForm] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [featureInput, setFeatureInput] = useState('');
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<{ url: string; publicId: string }[]>([]);
@@ -39,7 +39,7 @@ export default function EditVehiclePage() {
         });
         setExistingImages(vehicle.images || []);
       })
-      .catch(err => setError(err.message))
+      .catch(err => toast.error(err.message))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -56,7 +56,6 @@ export default function EditVehiclePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    setError(null);
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
@@ -68,16 +67,27 @@ export default function EditVehiclePage() {
       });
       imageFiles.forEach(file => formData.append('images', file));
       await updateVehicle(id, formData);
+      toast.success('Vehicle updated successfully');
       router.push('/admin/vehicles');
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message || 'Failed to update vehicle');
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading vehicle...</div>;
-  if (error) return <ErrorBanner message={error} />;
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <Skeleton className="h-8 w-48 mb-6" />
+        <div className="space-y-4">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
   if (!form) return null;
 
   return (
@@ -187,7 +197,7 @@ export default function EditVehiclePage() {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <button type="submit" disabled={submitting} className="px-6 py-2 bg-brand-primary text-white uppercase font-bold">
+          <button type="submit" disabled={submitting} className="px-6 py-2 bg-brand-primary text-white uppercase font-bold disabled:opacity-50">
             {submitting ? 'Saving...' : 'Save Changes'}
           </button>
           <button type="button" onClick={() => router.back()} className="px-6 py-2 border border-admin-border uppercase">Cancel</button>

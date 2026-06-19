@@ -6,6 +6,7 @@ import { AdminDataTable } from '@/features/admin/components/AdminDataTable';
 import { fetchAdminUsers, updateAdminUser, deleteAdminUser } from '@/features/admin/services/adminService';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import type { AdminUser } from '@/features/admin/types';
+import { AdminVehiclesSkeleton } from '@/features/admin/components/vehicles/AdminVehiclesSkeleton';
 
 const USER_TABLE_HEADERS = [
   'ID',
@@ -75,7 +76,7 @@ export default function AdminUsersPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading users...</div>;
+  if (loading) return <AdminVehiclesSkeleton/>;
   if (error) return <ErrorBanner message={error} />;
 
   return (

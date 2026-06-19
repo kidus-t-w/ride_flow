@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api/client';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
+import { AccountSkeleton } from '@/features/dashboard/components/AccountSkeleton';
+import toast from 'react-hot-toast';
 
 interface UserProfile {
   id: number;
@@ -18,7 +20,6 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -39,8 +40,6 @@ export default function AccountPage() {
     if (!profile) return;
     setSaving(true);
     setError(null);
-    setSuccess(null);
-
     try {
       if (profile.role === 'admin') {
         await api.patch(`/admin/users/${profile.id}`, {
@@ -48,19 +47,19 @@ export default function AccountPage() {
           lastName: profile.lastName,
           phone: profile.phone,
         });
-        setSuccess('Profile updated successfully');
+        toast.success('Profile updated successfully');
       } else {
-        setSuccess('Profile update is not yet implemented for customers. Changes saved locally only.');
-        localStorage.setItem('tempProfile', JSON.stringify(profile));
+        toast.success('Profile updated (simulated – backend endpoint pending)');
       }
     } catch (err: any) {
+      toast.error(err.message || 'Failed to update profile');
       setError(err.message);
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading account...</div>;
+  if (loading) return <AccountSkeleton />;
   if (error) return <ErrorBanner message={error} />;
   if (!profile) return null;
 
@@ -70,9 +69,6 @@ export default function AccountPage() {
       <p className="text-dashboard-subtitle text-brand-ink mb-6">
         Manage your personal information and contact details.
       </p>
-
-      {success && <div className="p-4 bg-green-50 text-green-800 border border-green-200">{success}</div>}
-
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1">
@@ -94,18 +90,10 @@ export default function AccountPage() {
             />
           </div>
         </div>
-
         <div className="space-y-1">
           <label className="text-admin-label uppercase text-brand-muted">Email</label>
-          <input
-            type="email"
-            value={profile.email}
-            disabled
-            className="w-full h-10 border border-admin-border bg-admin-surface-muted px-3 text-brand-muted cursor-not-allowed"
-          />
-          <p className="text-xs text-brand-muted">Email cannot be changed</p>
+          <input type="email" value={profile.email} disabled className="w-full h-10 border border-admin-border bg-admin-surface-muted px-3 text-brand-muted cursor-not-allowed" />
         </div>
-
         <div className="space-y-1">
           <label className="text-admin-label uppercase text-brand-muted">Phone Number</label>
           <input
@@ -113,19 +101,15 @@ export default function AccountPage() {
             value={profile.phone || ''}
             onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
             className="w-full h-10 border border-admin-border px-3"
-            placeholder="+1 234 567 8900"
           />
         </div>
-
-        <div className="pt-4">
-          <button
-            type="submit"
-            disabled={saving}
-            className="h-10 px-6 bg-brand-primary text-white uppercase text-sm font-bold tracking-wide hover:bg-brand-primary-hover disabled:opacity-50"
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={saving}
+          className="h-10 px-6 bg-brand-primary text-white uppercase text-sm font-bold tracking-wide hover:bg-brand-primary-hover disabled:opacity-50"
+        >
+          {saving ? 'Saving...' : 'Save Changes'}
+        </button>
       </form>
     </div>
   );

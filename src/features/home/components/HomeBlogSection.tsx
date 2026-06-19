@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { fetchPublicBlogs } from '@/features/blog/services/blogService';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import type { PublicBlogPost } from '@/features/blog/services/blogService';
+import { BlogListingSkeleton } from '@/features/blog/components/BlogListingSkeleton';
 
 export default function HomeBlogSection() {
   const [posts, setPosts] = useState<PublicBlogPost[]>([]);
@@ -28,9 +29,7 @@ export default function HomeBlogSection() {
 
   if (loading) {
     return (
-      <section className="w-full bg-admin-surface py-20 px-4 md:px-12 border-t border-admin-border">
-        <div className="max-w-[1440px] mx-auto text-center">Loading insights...</div>
-      </section>
+      <BlogListingSkeleton/>
     );
   }
 

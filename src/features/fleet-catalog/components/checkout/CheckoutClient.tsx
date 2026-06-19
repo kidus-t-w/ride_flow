@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { useWalletConnection } from '@/hooks/useWalletConnection';
 import { CheckoutDriverForm } from '@/features/fleet-catalog/components/checkout/CheckoutDriverForm';
 import { CheckoutHeader } from '@/features/fleet-catalog/components/checkout/CheckoutHeader';
@@ -20,6 +21,7 @@ import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import EthPaymentButton from '@/components/EthPaymentButton';
 import { BookingModal } from '@/components/BookingModal';
 import type { FleetVehicle, CheckoutCryptoAsset, RentalRate } from '@/features/fleet-catalog/types';
+import { CheckoutSkeleton } from './CheckoutSkeleton';
 
 const isRentalRate = (value: string | null): value is RentalRate =>
   value === 'best' || value === 'flexible';
@@ -40,6 +42,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
   const [error, setError] = useState<string | null>(null);
   const selectedRate = isRentalRate(rateId) ? rateId : 'best';
 
+  // Driver form state
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -98,6 +101,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
     });
   };
 
+  // Fetch ETH/USD price
   useEffect(() => {
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
       .then((res) => res.json())
@@ -105,6 +109,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
       .catch(() => setEthPriceUsd(3000));
   }, []);
 
+  // Initial vehicle fetch
   useEffect(() => {
     if (!carId) {
       setError('No car selected');
@@ -118,6 +123,22 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+  }, [carId]);
+
+  // Re-fetch vehicle when tab becomes visible (to catch price/availability updates)
+  useEffect(() => {
+    if (!carId) return;
+    const handleVisibilityChange = () => {
+      if (!document.hidden && carId) {
+        getFleetVehicleById(carId)
+          .then((vehicle) => {
+            if (vehicle) setCar(vehicle);
+          })
+          .catch(console.error);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [carId]);
 
   const basePrice = car ? getCheckoutBasePrice(car, selectedRate) : 0;
@@ -142,9 +163,11 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
   const copyInvoiceAddress = useCallback(async () => {
     await navigator.clipboard.writeText(depositAddress);
     setCopied(true);
+    toast.success('Address copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
   }, [depositAddress]);
 
+  // Modified: show toast for "already booked" error, otherwise modal
   const createBookingRecord = async (txHash: string, notes: string) => {
     if (!car || !pickupDate || !returnDate) {
       setError('Missing car or rental dates');
@@ -166,13 +189,19 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
         () => router.push(getBookingRedirectPath())
       );
     } catch (err: any) {
-      showModal(
-        'error',
-        'Booking Failed',
-        err.message || 'Unable to complete booking. Please try again.',
-        'Go to Homepage',
-        () => router.push('/')
-      );
+      const errorMsg = err.message || 'Unable to complete booking. Please try again.';
+      // If the vehicle is already booked, show a toast (no modal)
+      if (errorMsg.toLowerCase().includes('already booked')) {
+        toast.error(errorMsg);
+      } else {
+        showModal(
+          'error',
+          'Booking Failed',
+          errorMsg,
+          'Go to Homepage',
+          () => router.push('/')
+        );
+      }
     }
   };
 
@@ -199,13 +228,18 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
         () => router.push(getBookingRedirectPath())
       );
     } catch (err: any) {
-      showModal(
-        'error',
-        'Booking Failed',
-        err.message || 'Unable to submit booking request.',
-        'Go to Homepage',
-        () => router.push('/')
-      );
+      const errorMsg = err.message || 'Unable to submit booking request.';
+      if (errorMsg.toLowerCase().includes('already booked')) {
+        toast.error(errorMsg);
+      } else {
+        showModal(
+          'error',
+          'Booking Failed',
+          errorMsg,
+          'Go to Homepage',
+          () => router.push('/')
+        );
+      }
     } finally {
       setIsSubmittingManual(false);
     }
@@ -213,7 +247,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
 
   const goBack = () => router.push('/fleetcatalog');
 
-  if (loading) return <div className="p-8 text-center">Loading checkout...</div>;
+  if (loading) return <CheckoutSkeleton />;
   if (error || !car) return <ErrorBanner message={error || 'Car data unavailable'} />;
 
   const safePickupDate = pickupDate || '';
@@ -224,6 +258,8 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
     <div className="w-full bg-admin-surface min-h-screen text-brand-ink py-12 px-4 md:px-8 animate-in fade-in duration-200">
       <div className="max-w-admin-container mx-auto">
         <CheckoutHeader totalMainStr={totalMainStr} onBack={goBack} />
+
+        {/* Desktop layout */}
         <div className="hidden lg:grid lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-7 space-y-10">
             <CheckoutDriverForm
@@ -243,6 +279,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
               submitted={submitted}
             />
 
+            {/* MetaMask instant payment section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Pay Instantly with MetaMask</h3>
               <p className="text-sm text-brand-muted">
@@ -300,6 +337,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
               )}
             </div>
 
+            {/* Manual crypto payment section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Manual Crypto Payment</h3>
               <p className="text-sm text-brand-muted">
@@ -333,6 +371,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
           </div>
         </div>
 
+        {/* Mobile layout (stacked) */}
         <div className="flex flex-col lg:hidden gap-8">
           <div className="order-1">
             <CheckoutDriverForm
@@ -362,6 +401,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
             />
           </div>
           <div className="order-3 space-y-8">
+            {/* MetaMask section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Pay Instantly with MetaMask</h3>
               <p className="text-sm text-brand-muted">
@@ -419,6 +459,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
               )}
             </div>
 
+            {/* Manual crypto section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Manual Crypto Payment</h3>
               <p className="text-sm text-brand-muted">

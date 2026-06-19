@@ -117,7 +117,7 @@ export const BlogPublisherTable = ({
                   onClick={() => onPurge(blog.id)}
                   className="text-admin-action text-brand-danger bg-transparent border-none p-0 cursor-pointer uppercase hover:underline"
                 >
-                  Purge
+                  Delete
                 </button>
               </div>
             )}

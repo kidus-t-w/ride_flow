@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { createBlogPost } from '@/features/admin/services/adminService';
-import { ErrorBanner } from '@/components/ui/ErrorBanner';
 
 export default function CreateBlogPage() {
   const router = useRouter();
@@ -15,7 +15,6 @@ export default function CreateBlogPage() {
   const [author, setAuthor] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const generateExcerpt = (text: string) => {
     const plainText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -31,11 +30,10 @@ export default function CreateBlogPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim() || !coverUrl.trim() || !author.trim()) {
-      setError('Title, content, cover URL, and author are required');
+      toast.error('Title, content, cover URL, and author are required');
       return;
     }
     setSubmitting(true);
-    setError(null);
 
     const excerpt = generateExcerpt(content);
     const blogData = {
@@ -51,9 +49,10 @@ export default function CreateBlogPage() {
 
     try {
       await createBlogPost(blogData);
+      toast.success('Blog post created successfully');
       router.push('/admin/blog');
     } catch (err: any) {
-      setError(err.message || 'Failed to create blog post');
+      toast.error(err.message || 'Failed to create blog post');
     } finally {
       setSubmitting(false);
     }
@@ -62,7 +61,6 @@ export default function CreateBlogPage() {
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold uppercase text-brand-ink mb-6">Create New Blog Post</h1>
-      {error && <ErrorBanner message={error} />}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-1">
           <label className="text-admin-label uppercase text-brand-muted">Title *</label>

@@ -16,6 +16,7 @@ import { RevenueTable } from '@/features/admin/components/analytics/RevenueTable
 import { MostBookedTable } from '@/features/admin/components/analytics/MostBookedTable';
 import { FleetCompositionGrid } from '@/features/admin/components/analytics/FleetCompositionGrid';
 import { RecentBookingsTable } from '@/features/admin/components/analytics/RecentBookingsTable';
+import { AdminAnalyticsSkeleton } from '@/features/admin/components/AdminTableSkeleton';
 
 export default function AdminFleetAnalyticsPage() {
   const [overview, setOverview] = useState<any>(null);
@@ -51,7 +52,7 @@ export default function AdminFleetAnalyticsPage() {
     loadData();
   }, []);
 
-  if (loading) return <div className="p-8 text-center">Loading analytics…</div>;
+  if (loading) return <AdminAnalyticsSkeleton />;
   if (error) return <ErrorBanner message={error} />;
 
   return (

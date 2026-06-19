@@ -6,6 +6,7 @@ import { AdminDataTable } from '@/features/admin/components/AdminDataTable';
 import { fetchAllBookings, updateBookingStatus } from '@/features/admin/services/adminService';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import type { ReservationLog } from '@/features/admin/types';
+import { AdminVehiclesSkeleton } from '@/features/admin/components/vehicles/AdminVehiclesSkeleton';
 
 const HEADERS = [
   'Reservation ID',
@@ -54,7 +55,7 @@ export default function AdminReservationsPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading bookings...</div>;
+  if (loading) return <AdminVehiclesSkeleton/>
   if (error) return <ErrorBanner message={error} />;
 
   return (

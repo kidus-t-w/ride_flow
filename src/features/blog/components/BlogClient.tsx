@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { fetchPublicBlogs, PublicBlogPost } from '@/features/blog/services/blogService';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
+import { BlogListingSkeleton } from './BlogListingSkeleton';
 
 export default function PublicBlogPage() {
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'INSIGHTS' | 'ENGINEERING' | 'ANNOUNCEMENTS'>('ALL');
@@ -29,7 +30,7 @@ export default function PublicBlogPage() {
   const featuredPost = filteredArticles[0];
   const gridPosts = filteredArticles.slice(1);
 
-  if (loading) return <div className="p-8 text-center">Loading insights...</div>;
+  if (loading) return <BlogListingSkeleton/>;
   if (error) return <ErrorBanner message={error} />;
 
   return (
