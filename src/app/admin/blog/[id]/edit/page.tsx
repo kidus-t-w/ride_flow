@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { fetchBlogById, updateBlogPost } from '@/features/admin/services/adminService';
+import { uploadImageToCloudinary } from '@/lib/cloudinary';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function EditBlogPage() {
@@ -18,7 +19,9 @@ export default function EditBlogPage() {
   const [coverUrl, setCoverUrl] = useState('');
   const [author, setAuthor] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [newImageFile, setNewImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -40,39 +43,42 @@ export default function EditBlogPage() {
       });
   }, [id, router]);
 
-  const generateExcerpt = (text: string) => {
-    const plainText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-    return plainText.slice(0, 160) + (plainText.length > 160 ? '...' : '');
-  };
-
-  const handleCoverUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value;
-    setCoverUrl(url);
-    setImagePreview(url);
-    if (!url) setImagePreview(null);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !content.trim() || !coverUrl.trim() || !author.trim()) {
-      toast.error('Title, content, cover URL, and author are required');
+    if (!title.trim() || !content.trim() || !author.trim()) {
+      toast.error('Title, content, and author are required');
       return;
     }
     setSubmitting(true);
 
-    const excerpt = generateExcerpt(content);
-    const blogData = {
-      title: title.trim(),
-      category,
-      status,
-      content,
-      excerpt,
-      coverUrl: coverUrl.trim(),
-      author: author.trim(),
-      publishedDate: new Date().toISOString(),
-    };
-
     try {
+      let finalCoverUrl = coverUrl;
+      if (newImageFile) {
+        setIsUploading(true);
+        finalCoverUrl = await uploadImageToCloudinary(newImageFile);
+        setIsUploading(false);
+      }
+
+      const excerpt = generateExcerpt(content);
+      const blogData = {
+        title: title.trim(),
+        category,
+        status,
+        content,
+        excerpt,
+        coverUrl: finalCoverUrl,
+        author: author.trim(),
+        publishedDate: new Date().toISOString(),
+      };
+
       await updateBlogPost(id, blogData);
       toast.success('Blog post updated successfully');
       router.push('/admin/blog');
@@ -80,7 +86,13 @@ export default function EditBlogPage() {
       toast.error(err.message || 'Failed to update blog post');
     } finally {
       setSubmitting(false);
+      setIsUploading(false);
     }
+  };
+
+  const generateExcerpt = (text: string) => {
+    const plainText = text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    return plainText.slice(0, 160) + (plainText.length > 160 ? '...' : '');
   };
 
   if (loading) {
@@ -148,16 +160,38 @@ export default function EditBlogPage() {
           />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-admin-label uppercase text-brand-muted">Cover Image URL *</label>
+        <div className="space-y-2">
+          <label className="text-admin-label uppercase text-brand-muted">Cover Image</label>
+          {coverUrl && !newImageFile && (
+            <div className="mb-2">
+              <img src={coverUrl} alt="Current cover" className="max-h-32 object-cover border border-admin-border" />
+              <p className="text-xs text-brand-muted mt-1">Current image</p>
+            </div>
+          )}
           <input
-            type="url"
-            value={coverUrl}
-            onChange={handleCoverUrlChange}
-            className="w-full h-10 border border-admin-border px-3"
-            required
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleImageChange}
+            className="block w-full"
           />
-          {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 max-h-40 object-cover" />}
+          {imagePreview && newImageFile && (
+            <div className="mt-2">
+              <img src={imagePreview} alt="Preview" className="max-h-48 object-cover border border-admin-border" />
+              <button
+                type="button"
+                onClick={() => { setNewImageFile(null); setImagePreview(coverUrl || null); }}
+                className="mt-1 text-xs text-brand-danger hover:underline"
+              >
+                Cancel new image
+              </button>
+            </div>
+          )}
+          {isUploading && (
+            <div className="text-sm text-brand-muted">Uploading image...</div>
+          )}
+          <p className="text-xs text-brand-muted">
+            Upload a new image to replace the current one (optional). If left empty, the current image will be kept.
+          </p>
         </div>
 
         <div className="space-y-1">
@@ -174,10 +208,10 @@ export default function EditBlogPage() {
         <div className="flex gap-4">
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || isUploading}
             className="px-6 py-2 bg-brand-primary text-white uppercase font-bold disabled:opacity-50"
           >
-            {submitting ? 'Saving...' : 'Save Changes'}
+            {submitting ? 'Saving...' : isUploading ? 'Uploading image...' : 'Save Changes'}
           </button>
           <button
             type="button"
