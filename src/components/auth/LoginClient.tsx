@@ -102,9 +102,7 @@ export default function LoginClient() {
                   <label htmlFor="password" className="text-admin-label uppercase text-brand-secondary block">
                     Password
                   </label>
-                  <Link href="/forgot-password" className="text-admin-body-sm text-brand-muted hover:text-brand-primary transition-colors">
-                    Forgot password?
-                  </Link>
+                  
                 </div>
                 <div className="relative">
                   <input
