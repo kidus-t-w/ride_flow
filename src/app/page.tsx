@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 }
 
 // ─── Homepage JSON-LD Schemas ─────────────────────────────────────────────────
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ride-floww.vercel.app/'
 
 const websiteSchema = {
   '@context': 'https://schema.org',
