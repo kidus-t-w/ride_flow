@@ -7,19 +7,15 @@ import { SessionProvider } from 'next-auth/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// 🔧 REPLACE: set your production domain here
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ride-floww.vercel.app/'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
 const SITE_NAME = 'RideFlow'
 
 // ─── Root Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  // metadataBase is REQUIRED — without it all relative OG image URLs break silently
   metadataBase: new URL(SITE_URL),
 
   title: {
-    // This is the homepage title
     default: `${SITE_NAME} — Browse, Rent & Buy Vehicles. Pay with Crypto`,
-    // Every other page uses this template: "About RideFlow | RideFlow"
     template: `%s | ${SITE_NAME}`,
   },
 
@@ -45,7 +41,6 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
 
-  // ── Robots ────────────────────────────────────────────────────────────────
   robots: {
     index: true,
     follow: true,
@@ -58,13 +53,10 @@ export const metadata: Metadata = {
     },
   },
 
-  // ── Canonical ────────────────────────────────────────────────────────────
   alternates: {
     canonical: SITE_URL,
   },
 
-  // ── Open Graph ────────────────────────────────────────────────────────────
-  // 🔧 REPLACE: add a real 1200x630px OG image to /public/og-default.jpg
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -83,8 +75,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  // ── Twitter / X ──────────────────────────────────────────────────────────
-  // 🔧 REPLACE: swap @rideflow for your real Twitter handle
   twitter: {
     card: 'summary_large_image',
     site: '@rideflow',
@@ -95,31 +85,23 @@ export const metadata: Metadata = {
     images: ['https://i.postimg.cc/FKBzFVyR/home.jpg'],
   },
 
-  // ── Icons ─────────────────────────────────────────────────────────────────
-  // 🔧 REPLACE: add these files to /public
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
 
-  // ── Manifest ─────────────────────────────────────────────────────────────
   manifest: '/site.webmanifest',
 
-  // ── Google Search Console verification ───────────────────────────────────
-  // 🔧 REPLACE: paste your real verification code from GSC
   verification: {
-    google: 'PASTE_YOUR_GSC_VERIFICATION_CODE_HERE',
+    google: 'PASTE_YOUR_GSC_VERIFICATION_CODE_HERE', // 🔧 REPLACE
   },
 
-  // ── App metadata ─────────────────────────────────────────────────────────
   applicationName: SITE_NAME,
   category: 'automotive',
 }
 
 // ─── LocalBusiness + AutoRental JSON-LD Schema ───────────────────────────────
-// This tells Google exactly what RideFlow is and where it operates.
-// 🔧 REPLACE: fill in address, phone, email and social links below.
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': ['AutoRental', 'LocalBusiness'],
@@ -130,24 +112,22 @@ const localBusinessSchema = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   image: `${SITE_URL}/og-default.jpg`,
-  telephone: '+1-800-000-0000',          // 🔧 REPLACE
-  email: 'hello@rideflow.com',           // 🔧 REPLACE
+  telephone: '+1-800-000-0000',           // 🔧 REPLACE
+  email: 'hello@rideflow.com',            // 🔧 REPLACE
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '123 Example Street', // 🔧 REPLACE
-    addressLocality: 'Addis Ababa',      // 🔧 REPLACE
-    addressCountry: 'ET',                // 🔧 REPLACE — ISO 3166-1 alpha-2
+    streetAddress: '123 Example Street',  // 🔧 REPLACE
+    addressLocality: 'Addis Ababa',       // 🔧 REPLACE
+    addressCountry: 'ET',
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 9.005401,   // 🔧 REPLACE
-    longitude: 38.763611, // 🔧 REPLACE
+    latitude: 9.005401,                   // 🔧 REPLACE
+    longitude: 38.763611,                 // 🔧 REPLACE
   },
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
-    dayOfWeek: [
-      'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday',
-    ],
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     opens: '08:00',
     closes: '20:00',
   },
@@ -155,13 +135,13 @@ const localBusinessSchema = {
   currenciesAccepted: 'USD, ETH',
   priceRange: '$$',
   sameAs: [
-    'https://twitter.com/rideflow',   // 🔧 REPLACE
-    'https://instagram.com/rideflow', // 🔧 REPLACE
+    'https://twitter.com/rideflow',          // 🔧 REPLACE
+    'https://instagram.com/rideflow',        // 🔧 REPLACE
     'https://linkedin.com/company/rideflow', // 🔧 REPLACE
   ],
 }
 
-// ─── Root Layout ────
+// ─── Root Layout ─────────────────────────────────────────────────────────────
 export default function RootLayout({
   children,
 }: {
@@ -170,6 +150,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen bg-white`}>
+        {/* ── JSON-LD: LocalBusiness / AutoRental ── */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
         <Web3Provider>
           <SessionProvider>
             <Navbar />
