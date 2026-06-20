@@ -6,7 +6,7 @@ import { Suspense } from 'react'
 import FleetCatalogClient from './FleetCatalogClient'
 
 // ─── Site URL ─────────────────────────────────────────────────────────────────
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ride-floww.vercel.app/'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
