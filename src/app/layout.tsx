@@ -8,7 +8,7 @@ import { SessionProvider } from 'next-auth/react'
 const inter = Inter({ subsets: ['latin'] })
 
 // 🔧 REPLACE: set your production domain here
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ride-floww.vercel.app/'
 const SITE_NAME = 'RideFlow'
 
 // ─── Root Metadata ────────────────────────────────────────────────────────────
