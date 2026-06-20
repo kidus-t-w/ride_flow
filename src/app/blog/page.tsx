@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 // ─── Structured Data ──────────────────────────────────────────────────────────
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ride-floww.vercel.app/'
 
 // Blog schema — registers this as a blog listing page with Google
 const blogSchema = {
