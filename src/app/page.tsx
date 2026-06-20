@@ -8,8 +8,6 @@ import HomeBlogSection from '@/features/home/components/HomeBlogSection'
 import Footer from '@/components/Footer'
 
 // ─── Homepage Metadata ────────────────────────────────────────────────────────
-// This OVERRIDES the defaults set in layout.tsx specifically for the homepage.
-// The title here does NOT use the template — homepage gets its own full title.
 export const metadata: Metadata = {
   title: 'RideFlow - Browse, Rent & Buy Vehicles. Pay with Crypto',
 
@@ -28,7 +26,7 @@ export const metadata: Metadata = {
       'Blockchain-enabled vehicle rental and sales. Browse our full fleet, compare models side by side and pay securely with ETH via MetaMask.',
     images: [
       {
-        url: 'https://i.postimg.cc/FKBzFVyR/home.jpg', // 🔧 Create a 1200x630px hero image for the homepage
+        url: 'https://i.postimg.cc/FKBzFVyR/home.jpg',
         width: 1200,
         height: 630,
         alt: 'RideFlow - Browse, Rent & Buy Vehicles. Decentralized Rides, Seamless Flow.',
@@ -46,13 +44,8 @@ export const metadata: Metadata = {
 }
 
 // ─── Homepage JSON-LD Schemas ─────────────────────────────────────────────────
-// Two schemas on the homepage:
-//   1. WebSite — enables Google Sitelinks Search Box in search results
-//   2. ItemList — tells Google the homepage showcases a list of vehicles
-
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
 
-// WebSite schema — enables the search box that appears under your result in Google
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -72,7 +65,6 @@ const websiteSchema = {
   inLanguage: 'en-US',
 }
 
-// BreadcrumbList for homepage — signals to Google this is the root of the site
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -86,17 +78,27 @@ const breadcrumbSchema = {
   ],
 }
 
-// ─── Homepage Component 
+// ─── Homepage Component ───────────────────────────────────────────────────────
 export default function HomePage() {
   return (
-    <main>
+    <>
+      {/* ── JSON-LD: WebSite + BreadcrumbList ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       <HeroSection />
       <HowItWorks />
-      <PromoOffers/>
+      <PromoOffers />
       <TrustSignals />
-      <HomeBlogSection/>
+      <HomeBlogSection />
       <Testimonials />
-      <Footer/>
-    </main>
+      <Footer />
+    </>
   )
 }
