@@ -79,7 +79,7 @@ export default function HomeBlogSection() {
             <div className="p-8 space-y-4 flex-1 flex flex-col justify-between">
               <div className="space-y-2">
                 <span className="text-[10px] font-bold tracking-wide text-brand-primary uppercase block">
-                  {featured.category} — Latest Transmission
+                  {featured.category} - Latest Transmission
                 </span>
                 <h3 className="text-[22px] font-bold leading-tight text-brand-ink uppercase group-hover:text-brand-primary transition-colors">
                   {featured.title}

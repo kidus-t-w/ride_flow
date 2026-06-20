@@ -6,11 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
 import { api } from '@/lib/api/client';
 
-interface FieldError {
-  field: string;
-  message: string;
-}
-
 export default function SignupPage() {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
@@ -20,53 +15,27 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
-
-  // Local validation: must be exactly 10 digits after stripping non-digits
-  const getCleanedPhone = (raw: string): string => {
-    return raw.replace(/\D/g, '');
-  };
+  const [formError, setFormError] = useState('');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFieldErrors([]);
+    setFormError('');
     setIsSubmitting(true);
 
-    const cleanedPhone = getCleanedPhone(phone);
-    console.log('Original phone input:', phone);
-    console.log('Cleaned phone (digits only):', cleanedPhone);
-
-    // Validate length
-    if (!cleanedPhone) {
-      setFieldErrors([{ field: 'phone', message: 'Phone number is required' }]);
+    if (!phone.trim()) {
+      setFormError('Phone number is required');
       setIsSubmitting(false);
       return;
     }
-    if (cleanedPhone.length !== 10) {
-      setFieldErrors([{ field: 'phone', message: 'Phone number must be exactly 10 digits (e.g., 0712345678). Please use a European mobile format.' }]);
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Password validation
-    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      setFieldErrors([{ field: 'password', message: 'Password must be at least 8 characters, include one uppercase letter and one number' }]);
-      setIsSubmitting(false);
-      return;
-    }
-
-    const payload = {
-      firstName,
-      lastName,
-      email,
-      password,
-      phone: cleanedPhone, // exactly 10 digits
-    };
-    console.log('Sending registration payload:', payload);
 
     try {
-      await api.post('/auth/register', payload);
-      console.log('Registration successful');
+      await api.post('/auth/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+        phone,
+      });
 
       const loginResult = await api.post<{ user: any; token: string }>('/auth/login', {
         email,
@@ -87,31 +56,16 @@ export default function SignupPage() {
         router.push('/dashboard');
       }
     } catch (err: any) {
-      console.error('Registration error:', err);
-      let errorMessage = err.message || 'Unable to create account. Please try again.';
-      try {
-        const parsed = JSON.parse(errorMessage);
-        if (parsed.errors && Array.isArray(parsed.errors)) {
-          setFieldErrors(parsed.errors);
-        } else {
-          setFieldErrors([{ field: 'general', message: errorMessage }]);
-        }
-      } catch {
-        setFieldErrors([{ field: 'general', message: errorMessage }]);
-      }
+      const message = err.message || 'Unable to create account. Please try again.';
+      setFormError(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const getFieldError = (fieldName: string) => {
-    return fieldErrors.find(err => err.field === fieldName)?.message;
-  };
-
   return (
     <div className="selection-admin min-h-screen w-full bg-admin-surface">
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-        {/* Left column – Hero / Brand (unchanged) */}
         <div className="relative hidden lg:flex flex-col justify-between bg-brand-primary p-12 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
@@ -134,7 +88,6 @@ export default function SignupPage() {
           <div className="relative z-10 text-xs text-white/40">© 2026 RideFlow – All rights reserved</div>
         </div>
 
-        {/* Right column – Signup form */}
         <div className="flex items-center justify-center px-6 py-12 md:px-10 lg:px-16">
           <div className="w-full max-w-md">
             <div className="mb-8">
@@ -159,7 +112,6 @@ export default function SignupPage() {
                     onChange={(e) => setFirstName(e.target.value)}
                     className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
                   />
-                  {getFieldError('firstName') && <p className="text-brand-danger text-xs mt-1">{getFieldError('firstName')}</p>}
                 </div>
                 <div className="space-y-1">
                   <label htmlFor="lastName" className="text-admin-label uppercase text-brand-secondary block">
@@ -175,7 +127,6 @@ export default function SignupPage() {
                     onChange={(e) => setLastName(e.target.value)}
                     className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
                   />
-                  {getFieldError('lastName') && <p className="text-brand-danger text-xs mt-1">{getFieldError('lastName')}</p>}
                 </div>
               </div>
 
@@ -193,10 +144,8 @@ export default function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
                 />
-                {getFieldError('email') && <p className="text-brand-danger text-xs mt-1">{getFieldError('email')}</p>}
               </div>
 
-              {/* Phone field with European example */}
               <div className="space-y-1">
                 <label htmlFor="phone" className="text-admin-label uppercase text-brand-secondary block">
                   Phone number <span className="text-brand-danger">*</span>
@@ -210,12 +159,8 @@ export default function SignupPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
-                  placeholder="0712345678"
+                  placeholder="+1 234 567 8900"
                 />
-                {getFieldError('phone') && <p className="text-brand-danger text-xs mt-1">{getFieldError('phone')}</p>}
-                <p className="text-[11px] text-brand-muted mt-1">
-                  Enter a 10‑digit number (e.g., 0712345678). 
-                </p>
               </div>
 
               <div className="space-y-1">
@@ -241,13 +186,12 @@ export default function SignupPage() {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {getFieldError('password') && <p className="text-brand-danger text-xs mt-1">{getFieldError('password')}</p>}
                 <p className="text-[11px] text-brand-muted mt-1">
                   At least 8 characters, one uppercase letter, one number
                 </p>
               </div>
 
-              {getFieldError('general') && <p className="text-brand-danger text-sm text-center">{getFieldError('general')}</p>}
+              {formError && <p className="text-admin-body-sm font-medium text-brand-danger">{formError}</p>}
 
               <button
                 type="submit"

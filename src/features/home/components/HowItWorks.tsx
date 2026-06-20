@@ -45,7 +45,7 @@ export default function HowItWorks() {
             How It Works
           </h2>
           <p className="text-brand-secondary text-base md:text-lg font-light leading-relaxed">
-            From search to driveway — your crypto car rental journey in four simple steps.
+            From search to driveway - your crypto car rental journey in four simple steps.
           </p>
         </div>
 

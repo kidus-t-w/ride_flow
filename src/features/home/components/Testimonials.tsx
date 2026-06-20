@@ -45,7 +45,7 @@ export default function Testimonials() {
               “{reviews[activeIndex].quote}”
             </p>
             <div className="text-[13px] font-bold tracking-[1.5px] uppercase text-[#6CCCD5] pt-2">
-              — {reviews[activeIndex].author}, <span className="text-[#CDE5ED] font-light">{reviews[activeIndex].location}</span>
+              - {reviews[activeIndex].author}, <span className="text-[#CDE5ED] font-light">{reviews[activeIndex].location}</span>
             </div>
           </div>
         </div>

@@ -12,10 +12,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  title: 'Rent a Vehicle — Browse Our Full Fleet | RideFlow',
+  title: 'Rent a Vehicle - Browse Our Full Fleet | RideFlow',
 
   description:
-    'Browse SUVs, sedans, electric vehicles, luxury cars, and pickup trucks available to rent. Filter by type, fuel, and price. Pay with ETH via MetaMask. Book in under 3 minutes.',
+    'Browse SUVs, sedans, electric vehicles, luxury cars and pickup trucks available to rent. Filter by type, fuel and price. Pay with ETH via MetaMask. Book in under 3 minutes.',
 
 
 
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
     url: '/fleet',
     siteName: 'RideFlow',
     locale: 'en_US',
-    title: 'Browse Our Full Vehicle Fleet — Rent with Crypto | RideFlow',
+    title: 'Browse Our Full Vehicle Fleet - Rent with Crypto | RideFlow',
     description:
-      'SUVs, sedans, EVs, luxury cars, and more. Filter by type, fuel, and price range. Pay securely with ETH via MetaMask. Instant booking confirmation.',
+      'SUVs, sedans, EVs, luxury cars and more. Filter by type, fuel and price range. Pay securely with ETH via MetaMask. Instant booking confirmation.',
     images: [
       {
         url: 'https://i.postimg.cc/Bnz1Y3jP/fleet.jpg', // host on your own domain
         width: 1200,
         height: 630,
-        alt: 'RideFlow vehicle fleet — cars available to rent with crypto',
+        alt: 'RideFlow vehicle fleet - cars available to rent with crypto',
         type: 'image/jpeg',
       },
     ],
@@ -47,12 +47,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@RideFlow',    // ← replace with your actual handle
     creator: '@RideFlow', // ← replace with your actual handle
-    title: 'Browse & Rent Vehicles — Pay with ETH | RideFlow',
+    title: 'Browse & Rent Vehicles - Pay with ETH | RideFlow',
     description:
       'Filter SUVs, EVs, luxury cars and more. Pay with MetaMask. Book in under 3 minutes.',
     images: {
       url: 'https://i.postimg.cc/Bnz1Y3jP/fleet.jpg',
-      alt: 'RideFlow fleet catalog — vehicles available to rent',
+      alt: 'RideFlow fleet catalog - vehicles available to rent',
     },
   },
 }
@@ -65,7 +65,7 @@ const itemListSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: 'RideFlow Vehicle Fleet',
-  description: 'Browse all vehicles available to rent on RideFlow, including SUVs, sedans, electric vehicles, luxury cars, hatchbacks, and pickup trucks.',
+  description: 'Browse all vehicles available to rent on RideFlow, including SUVs, sedans, electric vehicles, luxury cars, hatchbacks and pickup trucks.',
   url: `${SITE_URL}/fleet`,
 }
 
@@ -81,7 +81,7 @@ const serviceSchema = {
   },
   serviceType: 'Vehicle Rental',
   description:
-    'Rent SUVs, sedans, electric vehicles, luxury cars, hatchbacks, and pickup trucks. Pay securely with ETH via MetaMask on the Ethereum network.',
+    'Rent SUVs, sedans, electric vehicles, luxury cars, hatchbacks and pickup trucks. Pay securely with ETH via MetaMask on the Ethereum network.',
   areaServed: {
     '@type': 'Country',
     name: 'US', // ← update to your actual service area

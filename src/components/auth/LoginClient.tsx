@@ -102,7 +102,6 @@ export default function LoginClient() {
                   <label htmlFor="password" className="text-admin-label uppercase text-brand-secondary block">
                     Password
                   </label>
-                  
                 </div>
                 <div className="relative">
                   <input

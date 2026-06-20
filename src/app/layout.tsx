@@ -70,15 +70,15 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Browse, Rent & Buy Vehicles. Pay with Crypto`,
+    title: `${SITE_NAME} - Browse, Rent & Buy Vehicles. Pay with Crypto`,
     description:
-      'Blockchain-enabled vehicle rental and sales. Browse our full fleet, compare models, and pay with ETH via MetaMask. Book in under 3 minutes.',
+      'Blockchain-enabled vehicle rental and sales. Browse our full fleet, compare models and pay with ETH via MetaMask. Book in under 3 minutes.',
     images: [
       {
         url: 'https://i.postimg.cc/FKBzFVyR/home.jpg',
         width: 1200,
         height: 630,
-        alt: 'RideFlow — Decentralized Rides, Seamless Flow',
+        alt: 'RideFlow - Decentralized Rides, Seamless Flow',
       },
     ],
   },
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@rideflow',
     creator: '@rideflow',
-    title: `${SITE_NAME} — Rent & Buy Vehicles. Pay with Crypto`,
+    title: `${SITE_NAME} - Rent & Buy Vehicles. Pay with Crypto`,
     description:
       'Browse SUVs, sedans, electric and luxury vehicles. Pay with ETH via MetaMask. Secure blockchain payments.',
     images: ['https://i.postimg.cc/FKBzFVyR/home.jpg'],
@@ -119,14 +119,14 @@ export const metadata: Metadata = {
 
 // ─── LocalBusiness + AutoRental JSON-LD Schema ───────────────────────────────
 // This tells Google exactly what RideFlow is and where it operates.
-// 🔧 REPLACE: fill in address, phone, email, and social links below.
+// 🔧 REPLACE: fill in address, phone, email and social links below.
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': ['AutoRental', 'LocalBusiness'],
   '@id': `${SITE_URL}/#business`,
   name: SITE_NAME,
   description:
-    'Blockchain-enabled vehicle rental and sales platform. Browse, compare, rent, and purchase vehicles with secure ETH crypto payments via MetaMask.',
+    'Blockchain-enabled vehicle rental and sales platform. Browse, compare, rent and purchase vehicles with secure ETH crypto payments via MetaMask.',
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   image: `${SITE_URL}/og-default.jpg`,

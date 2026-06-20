@@ -11,7 +11,7 @@ export default function FeatureShowcase() {
     },
     {
       title: 'PREMIUM VEHICLES',
-      description: 'Explore our first-class collection of engineering marvels from BMW, Mercedes, Cadillac, and more.',
+      description: 'Explore our first-class collection of engineering marvels from BMW, Mercedes, Cadillac and more.',
       icon: Car,
     },
     {

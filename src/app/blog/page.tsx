@@ -7,10 +7,10 @@ import BlogClient from '@/features/blog/components/BlogClient'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: 'Blog — Vehicle Rental Tips, Crypto Payments & Web3 Guides',
+  title: 'Blog - Vehicle Rental Tips, Crypto Payments & Web3 Guides',
 
   description:
-    'The RideFlow blog covers how to rent vehicles with cryptocurrency, pay with ETH via MetaMask, compare cars, understand blockchain payments, and more. New articles weekly.',
+    'The RideFlow blog covers how to rent vehicles with cryptocurrency, pay with ETH via MetaMask, compare cars, understand blockchain payments and more. New articles weekly.',
 
   alternates: {
     canonical: '/blog',
@@ -19,24 +19,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/blog',
-    title: 'Blog — Vehicle Rental Tips, Crypto Payments & Web3 Guides | RideFlow',
+    title: 'Blog - Vehicle Rental Tips, Crypto Payments & Web3 Guides | RideFlow',
     description:
-      'Guides on renting vehicles, paying with ETH via MetaMask, comparing cars, and understanding blockchain payments. Read the RideFlow blog.',
+      'Guides on renting vehicles, paying with ETH via MetaMask, comparing cars and understanding blockchain payments. Read the RideFlow blog.',
     images: [
       {
         url: 'https://i.postimg.cc/FRWpG8XG/blog.jpg', // 🔧 1200x630px blog OG image in /public
         width: 1200,
         height: 630,
-        alt: 'RideFlow Blog — Vehicle Rental & Crypto Payment Guides',
+        alt: 'RideFlow Blog - Vehicle Rental & Crypto Payment Guides',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'RideFlow Blog — Rental Guides & Crypto Payment Tips',
+    title: 'RideFlow Blog - Rental Guides & Crypto Payment Tips',
     description:
-      'How to rent with crypto, MetaMask guides, vehicle comparisons, and blockchain payment explainers.',
+      'How to rent with crypto, MetaMask guides, vehicle comparisons and blockchain payment explainers.',
     images: ['https://i.postimg.cc/FRWpG8XG/blog.jpg'],
   },
 }
@@ -55,7 +55,7 @@ const blogSchema = {
   '@id': `${SITE_URL}/blog`,
   name: 'The RideFlow Blog',
   description:
-    'Guides on vehicle rentals, crypto payments, blockchain transactions, and smart mobility. Published by the RideFlow team.',
+    'Guides on vehicle rentals, crypto payments, blockchain transactions and smart mobility. Published by the RideFlow team.',
   url: `${SITE_URL}/blog`,
   publisher: {
     '@type': 'Organization',
@@ -106,7 +106,7 @@ export default function BlogPage() {
           </h1>
           <p className="text-sm font-light text-brand-muted mt-2 max-w-2xl">
             Guides on renting vehicles with cryptocurrency, paying with ETH via
-            MetaMask, comparing cars side by side, and understanding how
+            MetaMask, comparing cars side by side and understanding how
             blockchain payments protect your booking.
           </p>
         </div>

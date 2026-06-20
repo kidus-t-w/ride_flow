@@ -9,10 +9,10 @@ import FAQAccordion from '@/features/home/components/FAQAccordion'
 
 // ─── FAQ Page Metadata ────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: 'FAQ — Rentals, Crypto Payments & Blockchain Explained',
+  title: 'FAQ - Rentals, Crypto Payments & Blockchain Explained',
 
   description:
-    'Answers to your top questions about renting vehicles on RideFlow, paying with ETH via MetaMask, cancellation policy, and how our blockchain payment system works.',
+    'Answers to your top questions about renting vehicles on RideFlow, paying with ETH via MetaMask, cancellation policy and how our blockchain payment system works.',
 
   alternates: {
     canonical: '/faq',
@@ -21,24 +21,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/faq',
-    title: 'FAQ — Rentals, Crypto Payments & Blockchain | RideFlow',
+    title: 'FAQ - Rentals, Crypto Payments & Blockchain | RideFlow',
     description:
-      'Everything you need to know about renting and buying vehicles on RideFlow — including crypto payments, cancellation policy, and how to get started.',
+      'Everything you need to know about renting and buying vehicles on RideFlow - including crypto payments, cancellation policy and how to get started.',
     images: [
       {
         url: 'https://i.postimg.cc/mrc7BDv7/faq.jpg',
         width: 1200,
         height: 630,
-        alt: 'RideFlow FAQ — Vehicle Rental & Blockchain Payment Questions',
+        alt: 'RideFlow FAQ - Vehicle Rental & Blockchain Payment Questions',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'FAQ — Rentals, Crypto Payments & Blockchain | RideFlow',
+    title: 'FAQ - Rentals, Crypto Payments & Blockchain | RideFlow',
     description:
-      'Answers about renting vehicles, paying with ETH, cancellations, and our blockchain payment system.',
+      'Answers about renting vehicles, paying with ETH, cancellations and our blockchain payment system.',
     images: ['https://i.postimg.cc/mrc7BDv7/faq.jpg'],
   },
 }
@@ -53,22 +53,22 @@ const rentalFaqs = [
   {
     question: 'How do I rent a vehicle on RideFlow?',
     answer:
-      'Browse our full fleet on the Vehicles page, select the vehicle you want, and choose your rental dates on the availability calendar. Once you confirm the dates you will be taken to checkout where you can review the total price before payment. The whole process takes under 3 minutes. Your booking confirmation and receipt are sent to your email immediately after payment.',
+      'Browse our full fleet on the Vehicles page, select the vehicle you want and choose your rental dates on the availability calendar. Once you confirm the dates you will be taken to checkout where you can review the total price before payment. The whole process takes under 3 minutes. Your booking confirmation and receipt are sent to your email immediately after payment.',
   },
   {
     question: 'What types of vehicles are available to rent?',
     answer:
-      'Our fleet includes SUVs, sedans, electric vehicles, luxury cars, hatchbacks, and pickup trucks. You can filter by vehicle type, fuel type, transmission, and price range on the fleet catalog page to find exactly what you need.',
+      'Our fleet includes SUVs, sedans, electric vehicles, luxury cars, hatchbacks and pickup trucks. You can filter by vehicle type, fuel type, transmission and price range on the fleet catalog page to find exactly what you need.',
   },
   {
     question: 'How do I filter and compare vehicles?',
     answer:
-      'On the fleet catalog page, use the filter panel to narrow results by vehicle type, fuel type, transmission, and price range. To compare specific vehicles, click the Compare button on any vehicle card — you can compare up to 3 vehicles side by side, seeing their specs, fuel type, seat count, and daily price in one table.',
+      'On the fleet catalog page, use the filter panel to narrow results by vehicle type, fuel type, transmission and price range. To compare specific vehicles, click the Compare button on any vehicle card - you can compare up to 3 vehicles side by side, seeing their specs, fuel type, seat count and daily price in one table.',
   },
   {
     question: 'Do I need an account to rent a vehicle?',
     answer:
-      'Yes, you need a RideFlow account to complete a booking. Registration is free and takes less than 2 minutes — you only need your name, email address, and a password. Once registered, all your bookings, receipts, and payment history are saved in your customer dashboard.',
+      'Yes, you need a RideFlow account to complete a booking. Registration is free and takes less than 2 minutes - you only need your name, email address and a password. Once registered, all your bookings, receipts and payment history are saved in your customer dashboard.',
   },
 ]
 
@@ -81,17 +81,17 @@ const paymentFaqs = [
   {
     question: 'Which cryptocurrencies do you accept?',
     answer:
-      'We currently accept ETH (Ethereum) for all bookings, processed on the Ethereum Sepolia network. We chose Ethereum because it offers fast transaction confirmation, wide wallet support, and a publicly verifiable transaction record. If you prefer not to pay with crypto, please contact our team for alternative payment options.',
+      'We currently accept ETH (Ethereum) for all bookings, processed on the Ethereum Sepolia network. We chose Ethereum because it offers fast transaction confirmation, wide wallet support and a publicly verifiable transaction record. If you prefer not to pay with crypto, please contact our team for alternative payment options.',
   },
   {
     question: 'Is my crypto payment secure?',
     answer:
-      'Yes. Every payment is processed directly on the Ethereum blockchain — cryptographically secured, permanently recorded, and publicly verifiable using your transaction hash. We never store your wallet private key or seed phrase. Your transaction hash is saved to your booking record so you have verifiable proof of payment at all times.',
+      'Yes. Every payment is processed directly on the Ethereum blockchain - cryptographically secured, permanently recorded and publicly verifiable using your transaction hash. We never store your wallet private key or seed phrase. Your transaction hash is saved to your booking record so you have verifiable proof of payment at all times.',
   },
   {
     question: 'What is a transaction hash and where do I find it?',
     answer:
-      'A transaction hash is a unique identifier assigned to every blockchain transaction — it starts with 0x and is 66 characters long. Think of it as your payment receipt on the blockchain. After payment, your transaction hash is displayed on the confirmation page and stored permanently in your booking details under My Bookings.',
+      'A transaction hash is a unique identifier assigned to every blockchain transaction - it starts with 0x and is 66 characters long. Think of it as your payment receipt on the blockchain. After payment, your transaction hash is displayed on the confirmation page and stored permanently in your booking details under My Bookings.',
   },
 ]
 
@@ -99,18 +99,18 @@ const cancellationFaqs = [
   {
     question: 'What is the cancellation policy?',
     answer:
-      'You can cancel a booking up to 24 hours before your rental start date for a full refund. Cancellations made within 24 hours of the start date are subject to a 50% cancellation fee. To cancel, go to My Bookings in your customer dashboard, select the booking, and click Cancel. Crypto refunds are processed back to your original wallet address within 5 to 7 business days.',
+      'You can cancel a booking up to 24 hours before your rental start date for a full refund. Cancellations made within 24 hours of the start date are subject to a 50% cancellation fee. To cancel, go to My Bookings in your customer dashboard, select the booking and click Cancel. Crypto refunds are processed back to your original wallet address within 5 to 7 business days.',
   },
   {
     question: 'Can I modify my booking dates after confirming?',
     answer:
-      'Yes, booking dates can be modified up to 48 hours before the rental start date, subject to vehicle availability on the new dates. Go to My Bookings, select your booking, and choose Edit Dates. If the new dates result in a different total price you will be prompted to pay the difference or receive a partial refund.',
+      'Yes, booking dates can be modified up to 48 hours before the rental start date, subject to vehicle availability on the new dates. Go to My Bookings, select your booking and choose Edit Dates. If the new dates result in a different total price you will be prompted to pay the difference or receive a partial refund.',
   },
 ]
 
 // ─── FAQPage JSON-LD Schema ───────────────────────────────────────────────────
 // This is what makes Google show expandable Q&A answers directly in search results.
-// Rules: plain text answers only — no HTML, no lists, no markdown inside the text.
+// Rules: plain text answers only - no HTML, no lists, no markdown inside the text.
 // Google selects 2-3 of these to show as rich results based on relevance.
 
 const faqSchema = {
@@ -143,7 +143,7 @@ const breadcrumbSchema = {
 }
 
 // ─── Page Component ───────────────────────────────────────────────────────────
-// Server Component — all FAQ text is in the initial HTML that Google reads.
+// Server Component - all FAQ text is in the initial HTML that Google reads.
 // The accordion open/close animation is handled by FAQAccordion (Client Component).
 
 export default function FAQPage() {
@@ -168,7 +168,7 @@ export default function FAQPage() {
             </h1>
             <p className="text-sm font-normal text-brand-muted mt-2">
               Everything you need to know about renting vehicles, paying with
-              cryptocurrency, and how our blockchain payment system works.
+              cryptocurrency and how our blockchain payment system works.
             </p>
           </div>
 
