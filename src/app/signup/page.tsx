@@ -48,6 +48,8 @@ export default function SignupPage() {
       document.cookie = `accessToken=${loginResult.token}; path=/; max-age=604800; SameSite=Lax`;
       document.cookie = `userRole=${loginResult.user.role}; path=/; max-age=604800; SameSite=Lax`;
 
+      window.dispatchEvent(new Event('storage'));
+
       const redirectUrl = localStorage.getItem('redirectAfterLogin');
       if (redirectUrl) {
         localStorage.removeItem('redirectAfterLogin');
@@ -159,7 +161,7 @@ export default function SignupPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="h-12 w-full border border-admin-border bg-admin-surface px-4 text-dashboard-field text-brand-ink outline-none transition-colors focus:border-brand-primary"
-                  placeholder="+1 234 567 8900"
+                  placeholder="0911691822"
                 />
               </div>
 

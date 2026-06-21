@@ -28,6 +28,8 @@ export default function LoginClient() {
       document.cookie = `accessToken=${result.token}; path=/; max-age=604800; SameSite=Lax`;
       document.cookie = `userRole=${result.user.role}; path=/; max-age=604800; SameSite=Lax`;
 
+      window.dispatchEvent(new Event('storage'));
+
       const redirectUrl = localStorage.getItem('redirectAfterLogin');
       if (redirectUrl) {
         localStorage.removeItem('redirectAfterLogin');
@@ -66,7 +68,6 @@ export default function LoginClient() {
             <p className="text-white/80 text-lg leading-relaxed max-w-md">
               Book premium vehicles, manage your fleet, and settle instantly – all from one dashboard.
             </p>
-           
           </div>
           <div className="relative z-10 text-xs text-white/40">© 2026 RideFlow – All rights reserved</div>
         </div>
