@@ -6,7 +6,6 @@ import Image from 'next/image';
 export default function Footer() {
   const publicLinks = [
     { name: 'Home', href: '/' },
-    { name: 'Fleet Catalog', href: '#Hero_section' },
     { name: 'Blog Insights', href: '/blog' },
     { name: 'FAQ', href: '/faq' },
   ];
