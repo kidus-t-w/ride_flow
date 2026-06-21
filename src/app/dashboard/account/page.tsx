@@ -11,7 +11,6 @@ interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string | null;
   role: string;
 }
 
@@ -45,7 +44,6 @@ export default function AccountPage() {
         await api.patch(`/admin/users/${profile.id}`, {
           firstName: profile.firstName,
           lastName: profile.lastName,
-          phone: profile.phone,
         });
         toast.success('Profile updated successfully');
       } else {
@@ -93,15 +91,6 @@ export default function AccountPage() {
         <div className="space-y-1">
           <label className="text-admin-label uppercase text-brand-muted">Email</label>
           <input type="email" value={profile.email} disabled className="w-full h-10 border border-admin-border bg-admin-surface-muted px-3 text-brand-muted cursor-not-allowed" />
-        </div>
-        <div className="space-y-1">
-          <label className="text-admin-label uppercase text-brand-muted">Phone Number</label>
-          <input
-            type="tel"
-            value={profile.phone || ''}
-            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-            className="w-full h-10 border border-admin-border px-3"
-          />
         </div>
         <button
           type="submit"

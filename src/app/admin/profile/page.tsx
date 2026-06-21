@@ -14,7 +14,6 @@ export default function AdminProfilePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
 
   useEffect(() => {
     fetchAdminProfile()
@@ -22,7 +21,6 @@ export default function AdminProfilePage() {
         setProfile(data);
         setFirstName(data.firstName);
         setLastName(data.lastName);
-        setPhone(data.phone || '');
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -35,7 +33,7 @@ export default function AdminProfilePage() {
     setError(null);
     setSuccess(null);
     try {
-      const updated = await updateAdminProfile(profile.id, { firstName, lastName, phone: phone ?? null });
+      const updated = await updateAdminProfile(profile.id, { firstName, lastName});
       setProfile(updated);
       setSuccess('Profile updated successfully');
     } catch (err: any) {
@@ -88,15 +86,6 @@ export default function AdminProfilePage() {
           <p className="text-[11px] text-brand-muted">Email cannot be changed</p>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-admin-label text-brand-muted uppercase">Phone</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full h-10 border border-admin-border bg-admin-surface px-3 text-brand-ink focus:outline-none focus:border-brand-primary"
-          />
-        </div>
 
         <div className="pt-4">
           <button
