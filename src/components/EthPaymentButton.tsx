@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createBooking } from '@/features/fleet-catalog/services/fleetCatalogService';
 
 interface EthPaymentButtonProps {
   carId: string;
@@ -11,6 +12,11 @@ interface EthPaymentButtonProps {
   receiverAddress: string;
   redirectPath?: string;
   disabled?: boolean;
+  driverEmail: string;
+  driverFirstName: string;
+  driverLastName: string;
+  driverPhone: string;
+  driverCompany?: string;
 }
 
 const isValidEthAddress = (address: string): boolean => {
@@ -25,6 +31,11 @@ export default function EthPaymentButton({
   receiverAddress,
   redirectPath = '/dashboard/bookings',
   disabled = false,
+  driverEmail,
+  driverFirstName,
+  driverLastName,
+  driverPhone,
+  driverCompany,
 }: EthPaymentButtonProps) {
   const [state, setState] = useState<'idle' | 'connecting' | 'sending' | 'confirming' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +91,7 @@ export default function EthPaymentButton({
 
       setState('confirming');
 
+      // Poll for transaction receipt
       let receipt = null;
       for (let i = 0; i < 30; i++) {
         receipt = await window.ethereum.request({
@@ -87,12 +99,16 @@ export default function EthPaymentButton({
           params: [txHash],
         });
         if (receipt) break;
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
 
       if (!receipt || receipt.status !== '0x1') {
         throw new Error('Transaction failed or not confirmed in time');
       }
+
+      // Build driver info for notes
+      const driverInfo = `Driver: ${driverFirstName} ${driverLastName}, ${driverEmail}, ${driverPhone}${driverCompany ? `, Company: ${driverCompany}` : ''}`;
+      const notes = `Paid with ETH, tx: ${txHash} | ${driverInfo}`;
 
       const token = localStorage.getItem('accessToken');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/bookings`, {
@@ -105,20 +121,13 @@ export default function EthPaymentButton({
           vehicleId: carId,
           startDate: pickupDate.split('T')[0],
           endDate: returnDate.split('T')[0],
-          notes: `Paid with ETH, tx: ${txHash}`,
+          notes,
         }),
       });
 
       if (!response.ok) {
-        let errorMessage = `HTTP error ${response.status}`;
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch {
-          const text = await response.text();
-          errorMessage = text || errorMessage;
-        }
-        throw new Error(errorMessage);
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Booking creation failed');
       }
 
       const data = await response.json();

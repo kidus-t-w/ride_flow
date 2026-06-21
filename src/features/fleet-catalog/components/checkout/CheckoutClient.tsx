@@ -125,7 +125,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
       .finally(() => setLoading(false));
   }, [carId]);
 
-  // Re-fetch vehicle when tab becomes visible (to catch price/availability updates)
+  // Re-fetch vehicle when tab becomes visible
   useEffect(() => {
     if (!carId) return;
     const handleVisibilityChange = () => {
@@ -152,6 +152,16 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
     return userRole === 'admin' ? '/admin/reservations' : '/dashboard/bookings';
   };
 
+  // Build driver info string for booking notes
+  const buildDriverInfo = () => {
+    const parts = [];
+    if (firstName || lastName) parts.push(`Name: ${firstName} ${lastName}`.trim());
+    if (email) parts.push(`Email: ${email}`);
+    if (phoneNumber) parts.push(`Phone: ${phoneNumber}`);
+    if (company) parts.push(`Company: ${company}`);
+    return parts.join(' | ');
+  };
+
   const handleWalletConnect = () => {
     if (isConnected) {
       disconnectWallet();
@@ -167,30 +177,30 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
     setTimeout(() => setCopied(false), 2000);
   }, [depositAddress]);
 
-  // Modified: show toast for "already booked" error, otherwise modal
   const createBookingRecord = async (txHash: string, notes: string) => {
     if (!car || !pickupDate || !returnDate) {
       setError('Missing car or rental dates');
       return;
     }
     try {
+      const driverInfo = buildDriverInfo();
+      const fullNotes = `${notes}${driverInfo ? ` | ${driverInfo}` : ''}`;
       const booking = await createBooking({
         vehicleId: car.id,
         startDate: pickupDate.split('T')[0],
         endDate: returnDate.split('T')[0],
-        notes,
+        notes: fullNotes,
       });
       setBookingCreated(true);
       showModal(
         'success',
         'Booking Confirmed!',
-        `Booking ID: ${booking.id}. Your rental is now confirmed.`,
+        `Booking ID: ${booking.id}. Your rental is now confirmed.${driverInfo ? `\n\nDriver: ${driverInfo}` : ''}`,
         'View My Bookings',
         () => router.push(getBookingRedirectPath())
       );
     } catch (err: any) {
       const errorMsg = err.message || 'Unable to complete booking. Please try again.';
-      // If the vehicle is already booked, show a toast (no modal)
       if (errorMsg.toLowerCase().includes('already booked')) {
         toast.error(errorMsg);
       } else {
@@ -214,16 +224,18 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
     }
     setIsSubmittingManual(true);
     try {
+      const driverInfo = buildDriverInfo();
+      const notes = `Payment sent via ${selectedCrypto} to ${depositAddress}. Awaiting admin verification.${driverInfo ? ` | ${driverInfo}` : ''}`;
       const booking = await createBooking({
         vehicleId: car.id,
         startDate: pickupDate.split('T')[0],
         endDate: returnDate.split('T')[0],
-        notes: `Payment sent via ${selectedCrypto} to ${depositAddress}. Awaiting admin verification.`,
+        notes,
       });
       showModal(
         'success',
         'Booking Request Submitted',
-        `Booking ID: ${booking.id}. Admin will verify your payment and confirm the rental.`,
+        `Booking ID: ${booking.id}. Admin will verify your payment and confirm the rental.${driverInfo ? `\n\nDriver: ${driverInfo}` : ''}`,
         'View My Bookings',
         () => router.push(getBookingRedirectPath())
       );
@@ -279,7 +291,6 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
               submitted={submitted}
             />
 
-            {/* MetaMask instant payment section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Pay Instantly with MetaMask</h3>
               <p className="text-sm text-brand-muted">
@@ -332,12 +343,16 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
                     receiverAddress="0xe70c645e9392ec9e6b9cdb26be4b4885836c401d"
                     redirectPath={getBookingRedirectPath()}
                     disabled={!isFormValid}
+                    driverEmail={email}
+                    driverFirstName={firstName}
+                    driverLastName={lastName}
+                    driverPhone={phoneNumber}
+                    driverCompany={company}
                   />
                 </div>
               )}
             </div>
 
-            {/* Manual crypto payment section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Manual Crypto Payment</h3>
               <p className="text-sm text-brand-muted">
@@ -371,7 +386,7 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
           </div>
         </div>
 
-        {/* Mobile layout (stacked) */}
+        {/* Mobile layout */}
         <div className="flex flex-col lg:hidden gap-8">
           <div className="order-1">
             <CheckoutDriverForm
@@ -401,7 +416,6 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
             />
           </div>
           <div className="order-3 space-y-8">
-            {/* MetaMask section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Pay Instantly with MetaMask</h3>
               <p className="text-sm text-brand-muted">
@@ -454,12 +468,16 @@ export default function CheckoutClient({ carId, rateId, pickupDate, returnDate }
                     receiverAddress="0xe70c645e9392ec9e6b9cdb26be4b4885836c401d"
                     redirectPath={getBookingRedirectPath()}
                     disabled={!isFormValid}
+                    driverEmail={email}
+                    driverFirstName={firstName}
+                    driverLastName={lastName}
+                    driverPhone={phoneNumber}
+                    driverCompany={company}
                   />
                 </div>
               )}
             </div>
 
-            {/* Manual crypto section */}
             <div className="border border-admin-border p-6 space-y-4">
               <h3 className="text-xl font-bold uppercase text-brand-ink">Manual Crypto Payment</h3>
               <p className="text-sm text-brand-muted">

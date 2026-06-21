@@ -52,7 +52,7 @@ export const CheckoutDriverForm = (props: CheckoutDriverFormProps) => {
         if ((value as string).replace(/\D/g, '').length < 5) return 'Phone number must be at least 5 digits';
         return undefined;
       case 'ageConfirmed':
-        if (!value) return 'You must confirm you are 25 years or older';
+        if (!value) return 'You must confirm you are 21 years or older';
         return undefined;
       default:
         return undefined;
@@ -162,7 +162,7 @@ export const CheckoutDriverForm = (props: CheckoutDriverFormProps) => {
             >
               {props.isAgeConfirmed && <span className="text-admin-surface text-[11px] font-bold">✓</span>}
             </div>
-            <span className="text-admin-body font-bold text-brand-ink">I am 25 years of age or older *</span>
+            <span className="text-admin-body font-bold text-brand-ink">I am 21 years of age or older *</span>
           </div>
           {shouldShowError('ageConfirmed') && errors.ageConfirmed && <p className={errorClass}>{errors.ageConfirmed}</p>}
         </div>
