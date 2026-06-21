@@ -11,19 +11,19 @@ export default function Testimonials() {
       quote: "RideFlow is the only rental company I've never had an issue with. Seriously... they've turned me into a lifelong client.",
       author: "P.",
       location: "Los Angeles",
-      bgImage: "/images/testimonials/car-5.jpg"
+      bgImage: "/images/testimonials/car-5.webp"
     },
     {
       quote: "The vehicle was handed over pristine, fully configured, with absolute zero terminal counter friction. True premium utility engineering.",
       author: "M.",
       location: "Munich",
-      bgImage: "/images/testimonials/car-5.jpg"
+      bgImage: "/images/testimonials/car-5.webp"
     },
     {
       quote: "Uncompromising fleet choices paired with flawless on-demand digital concierge access. They understand what luxury logistics mean.",
       author: "Sarah K.",
       location: "Atlanta",
-      bgImage: "/images/testimonials/car-5.jpg"
+      bgImage: "/images/testimonials/car-5.webp"
     }
   ];
 

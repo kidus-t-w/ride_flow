@@ -25,7 +25,7 @@ export default function FeatureShowcase() {
     <section className="relative min-h-[90vh] w-full flex flex-col justify-between overflow-hidden bg-[#0A1215]">
       <div className="absolute inset-0 z-0">
         <img 
-          src="/images/car-1.jpg" 
+          src="/images/car-1.webp" 
           alt="RideFlow Premium Handover Experience" 
           className="w-full h-full object-cover object-center brightness-[0.45]"
         />

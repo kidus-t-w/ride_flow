@@ -5,7 +5,7 @@ export default function PromoOffers() {
       badgeMain: '20% DISCOUNT',
       title: 'START YOUR WEEK IN STYLE',
       subtitle: 'Save on week start rentals.',
-      image: '/images/promo/car-3.jpg',
+      image: '/images/promo/car-3.webp',
       ctaText: 'Book now',
       link: '#hero-section'
     },
@@ -14,7 +14,7 @@ export default function PromoOffers() {
       badgeMain: '20% DISCOUNT',
       title: 'SAVE ON LUXURY VEHICLES',
       subtitle: 'Book now and drive first class.',
-      image: '/images/promo/car-4.jpg',
+      image: '/images/promo/car-4.webp',
       ctaText: 'Book now',
       link: '#hero-section'
     }

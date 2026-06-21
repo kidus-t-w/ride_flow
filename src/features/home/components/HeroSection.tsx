@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <section id="hero-section"
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+      style={{ backgroundImage: "url('/images/hero-bg.webp')" }}
     >
       <div className="absolute inset-0 bg-black/40 pointer-events-none z-0" />
 
