@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 
   verification: {
-    google: 'PASTE_YOUR_GSC_VERIFICATION_CODE_HERE', // 🔧 REPLACE
+    google: 'JZh_ePIoYHZyC8WRSZKpxv1kaQ1JHRxIgSEdTtXwdEY', // 🔧 REPLACE
   },
 
   applicationName: SITE_NAME,
